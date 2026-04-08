@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bluebook Clone - Section 1</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bluebook-navy: #1a1f71;
+            --bluebook-blue: #4a69bd;
+            --bg-gray: #f5f7f9;
+            --border-color: #d1d5db;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: white;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #E6EDF8;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .section-info h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .directions-btn {
+            background: none;
+            border: none;
+            color: #1a1f71;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .timer-container {
+            text-align: center;
+        }
+
+        #timer {
+            font-size: 20px;
+            font-weight: bold;
+            display: block;
+        }
+
+        .hide-btn {
+            background: #e5e7eb;
+            border: 1px solid #999;
+            padding: 2px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .header-tools {
+            display: flex;
+            gap: 15px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        /* Blue Banner */
+        .test-preview-banner {
+            background-color: var(--bluebook-navy);
+            color: white;
+            text-align: center;
+            padding: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content Area */
+        main {
+            display: flex;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pane {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            line-height: 1.6;
+            font-size: 17px;
+        }
+
+        .left-pane {
+            border-right: 4px solid #e5e7eb;
+        }
+
+        .right-pane {
+            background-color: white;
+        }
+
+        /* Question Styles */
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            background: #333;
+            color: white;
+            padding: 5px 12px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .mark-review {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .option-container {
+            margin-top: 20px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .option:hover {
+            background-color: #f0f4ff;
+        }
+
+        .option-letter {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #333;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #E6EDF8;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .user-name {
+            font-size: 14px;
+        }
+
+        .question-nav {
+            background: #1e1e1e;
+            padding: 6px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .next-btn {
+            background-color: #4b66f1;
+            color: white;
+            border: none;
+            padding: 8px 30px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Divider Handle */
+        .divider-handle {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 12px;
+            height: 40px;
+            background: #666;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            z-index: 10;
+        }
+        .divider-handle span {
+            width: 2px;
+            height: 15px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="section-info">
+        <h2>Section 1: Reading and Writing</h2>
+        <button class="directions-btn">Directions <span>⌵</span></button>
+    </div>
+    <div class="timer-container">
+        <span id="timer">27:00</span>
+        <button class="hide-btn">Hide</button>
+    </div>
+    <div class="nav-right">
+        <div class="battery-status">
+            <span>100%</span>
+            <i class="fas fa-battery-full"></i>
+        </div>
+        
+        <div class="nav-tools">
+            <div class="tool-item">
+                <i class="fas fa-highlighter"></i>
+                <span>Highlights & Notes</span>
+            </div>
+            <div class="tool-item">
+                <i class="fas fa-ellipsis-v"></i>
+                <span>More</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- <div class="test-preview-banner">THIS IS A TEST PREVIEW</div> -->
+
+<main>
+    <div class="pane left-pane">
+        <p>In recommending Bao Phi’s collection <i>Sông I Sing</i>, a librarian noted that pieces by the spoken-word poet don’t lose their ________ nature when printed: the language has the same pleasant musical quality on the page as it does when performed by Phi.</p>
+    </div>
+
+    <div class="divider-handle">
+        <span></span>
+    </div>
+
+    <div class="pane right-pane">
+        <div class="question-header">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span class="question-number">1</span>
+                <span class="mark-review">⚐ Mark for Review</span>
+            </div>
+            <div style="color: #1a1f71; font-weight: bold;">ABC</div>
+        </div>
+
+        <p style="margin-bottom: 20px; font-weight: 500;">Which choice completes the text with the most logical and precise word or phrase?</p>
+
+        <div class="option-container">
+            <div class="option">
+                <div class="option-letter">A</div>
+                <div class="option-text">scholarly</div>
+            </div>
+            <div class="option">
+                <div class="option-letter">B</div>
+                <div class="option-text">melodic</div>
+            </div>
+            <div class="option">
+                <div class="option-letter">C</div>
+                <div class="option-text">jarring</div>
+            </div>
+            <div class="option">
+                <div class="option-letter">D</div>
+                <div class="option-text">personal</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="user-name">abbvsss Abdusattorov</div>
+    <div class="question-nav">Question 1 of 8 <span>⌃</span></div>
+    <button class="next-btn">Next</button>
+</footer>
+
+<script>
+    // Timer Logic
+    let time = 27 * 60; // 27 minut soniyalarda
+    const timerElement = document.getElementById('timer');
+
+    function updateTimer() {
+        const minutes = Math.floor(time / 60);
+        let seconds = time % 60;
+        seconds = seconds < 10 ? '0' + seconds : seconds;
+        timerElement.innerHTML = `${minutes}:${seconds}`;
+        
+        if (time > 0) {
+            time--;
+        } else {
+            clearInterval(timerInterval);
+            timerElement.innerHTML = "0:00";
+        }
+    }
+
+    const timerInterval = setInterval(updateTimer, 1000);
+
+    // Click effect for options
+    document.querySelectorAll('.option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.border = '1px solid var(--border-color)';
+                opt.style.backgroundColor = 'white';
+            });
+            option.style.border = '2px solid #1a1f71';
+            option.style.backgroundColor = '#f0f4ff';
+        });
+    });
+</script>
+
+</body>
+</html>
