@@ -1,6 +1,5 @@
 import { useState } from "react";
 import type { Module } from "../data/questions";
-import type { ModuleState } from "../App";
 import QuestionPaletteModal from "../components/QuestionPaletteModal";
 
 function formatTime(seconds: number): string {
@@ -26,6 +25,73 @@ interface TestScreenProps {
   onSubmit: () => void;
 }
 
+/* SVG icons matching Bluebook exactly */
+const HighlightIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+  </svg>
+);
+
+const BookmarkIcon = ({ filled }: { filled?: boolean }) => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+const MoreDotsIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+    <circle cx="12" cy="5" r="1.5" />
+    <circle cx="12" cy="12" r="1.5" />
+    <circle cx="12" cy="19" r="1.5" />
+  </svg>
+);
+
+const ChevronDownIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 9 12 15 18 9" />
+  </svg>
+);
+
+const ChevronUpIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="6 15 12 9 18 15" />
+  </svg>
+);
+
+const SmallBookmarkIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+  </svg>
+);
+
+/* The "AZ" accessibility/annotation icon visible on the right of the question header */
+const AnnotationIcon = () => (
+  <svg width="22" height="22" viewBox="0 0 36 36" fill="none">
+    <rect x="1" y="1" width="34" height="34" rx="17" fill="white" stroke="#888" strokeWidth="1.5" />
+    <text x="18" y="16" textAnchor="middle" fontSize="11" fontWeight="700" fill="#333" fontFamily="system-ui">A</text>
+    <text x="18" y="27" textAnchor="middle" fontSize="9" fontWeight="600" fill="#555" fontFamily="system-ui">Z</text>
+    <line x1="9" y1="19" x2="27" y2="19" stroke="#888" strokeWidth="1.2" />
+  </svg>
+);
+
+/* Right-side answer reference icon (the small circle with letter+ seen in screenshot) */
+const AnswerRefIcon = ({ letter, selected }: { letter: string; selected: boolean }) => (
+  <svg width="24" height="24" viewBox="0 0 36 36" fill="none">
+    <circle cx="18" cy="18" r="16" fill="white" stroke={selected ? "#1a56db" : "#aaa"} strokeWidth="1.5" />
+    <text x="14" y="22" fontSize="11" fontWeight="600" fill={selected ? "#1a56db" : "#777"} fontFamily="system-ui">{letter}</text>
+    <text x="23" y="17" fontSize="8" fontWeight="700" fill={selected ? "#1a56db" : "#888"} fontFamily="system-ui">+</text>
+  </svg>
+);
+
+/* Center divider icon — two vertical bars like the Bluebook "section progress" indicator */
+const DividerIcon = () => (
+  <svg width="12" height="24" viewBox="0 0 12 24" fill="none">
+    <rect x="1" y="4" width="4" height="16" rx="1" fill="#adb5bd" />
+    <rect x="7" y="4" width="4" height="16" rx="1" fill="#adb5bd" />
+  </svg>
+);
+
 export default function TestScreen({
   module,
   currentQuestion,
@@ -39,7 +105,6 @@ export default function TestScreen({
   onPrevious,
   onNext,
   onNavigate,
-  onReview,
   onSubmit,
 }: TestScreenProps) {
   const [showPalette, setShowPalette] = useState(false);
@@ -52,165 +117,281 @@ export default function TestScreen({
   const isLast = currentQuestion === totalQuestions;
 
   return (
-    <div className="fixed inset-0 flex flex-col bg-white" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <div
+      className="fixed inset-0 flex flex-col bg-white select-none"
+      style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
+    >
+      {/* ── TOP BAR ROW 1 ── */}
+      <div className="flex items-center justify-between px-5 bg-white" style={{ height: 40, borderBottom: "1px solid #e5e7eb" }}>
+        {/* Section name — regular weight, dark */}
+        <span style={{ fontSize: 14, fontWeight: 400, color: "#111827", letterSpacing: 0 }}>
+          {module.name}
+        </span>
 
-      {/* TOP BAR ROW 1 */}
-      <div className="flex items-center justify-between px-4 h-9 bg-white border-b border-gray-200">
-        <span className="text-sm font-semibold text-gray-900">{module.name}</span>
+        {/* Timer — bold, center */}
         <span
-          className={`text-xl font-bold tabular-nums leading-none ${
-            isLowTime ? "text-red-600" : "text-gray-900"
-          } ${timerHidden ? "invisible" : ""}`}
+          style={{
+            fontSize: 20,
+            fontWeight: 700,
+            color: isLowTime ? "#dc2626" : "#111827",
+            fontVariantNumeric: "tabular-nums",
+            visibility: timerHidden ? "hidden" : "visible",
+            letterSpacing: "0.02em",
+          }}
         >
           {formatTime(timeRemaining)}
         </span>
-        <div className="flex items-center gap-3">
-          <button className="text-gray-500 hover:text-gray-700">
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z" />
-            </svg>
+
+        {/* Icons right — highlight pen, bookmark, vertical dots */}
+        <div style={{ display: "flex", alignItems: "center", gap: 12, color: "#6b7280" }}>
+          <button className="hover:text-gray-900 transition-colors" title="Highlights">
+            <HighlightIcon />
           </button>
-          <button className="text-gray-500 hover:text-gray-700">
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-            </svg>
+          <button className="hover:text-gray-900 transition-colors" title="Bookmarks">
+            <BookmarkIcon />
           </button>
-          <span className="text-xs text-gray-500">⋮⋮⋮</span>
+          <button className="hover:text-gray-900 transition-colors" title="More">
+            <MoreDotsIcon />
+          </button>
         </div>
       </div>
 
-      {/* TOP BAR ROW 2 */}
-      <div className="flex items-center justify-between px-4 h-8 bg-white border-b border-gray-200">
-        <button className="flex items-center gap-1 text-sm text-gray-700 hover:text-gray-900 font-medium">
-          Directions
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-            <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
+      {/* ── TOP BAR ROW 2 ── dashed separator below */}
+      <div
+        className="flex items-center justify-between px-5 bg-white"
+        style={{
+          height: 34,
+          borderBottom: "1.5px dashed #d1d5db",
+        }}
+      >
+        {/* Directions dropdown */}
+        <button
+          style={{ display: "flex", alignItems: "center", gap: 4, fontSize: 13, fontWeight: 500, color: "#374151" }}
+          className="hover:text-gray-900 transition-colors"
+        >
+          Directions <ChevronDownIcon />
         </button>
+
+        {/* Hide/Show button */}
         <button
           onClick={onToggleTimer}
-          className="text-xs px-3 py-0.5 rounded border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium"
+          style={{
+            fontSize: 12,
+            fontWeight: 500,
+            color: "#374151",
+            padding: "2px 14px",
+            borderRadius: 4,
+            border: "1px solid #9ca3af",
+            background: "#fff",
+            cursor: "pointer",
+          }}
+          className="hover:bg-gray-50 transition-colors"
         >
           {timerHidden ? "Show" : "Hide"}
         </button>
-        <div className="flex items-center gap-3 text-xs text-gray-600 font-medium">
-          <button className="hover:text-gray-900">Highlights &amp; Notes</button>
-          <span className="text-gray-300">|</span>
-          <button className="hover:text-gray-900">More</button>
+
+        {/* Highlights & Notes | More */}
+        <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, fontWeight: 500, color: "#374151" }}>
+          <button className="hover:text-gray-900 transition-colors">Highlights &amp; Notes</button>
+          <span style={{ color: "#d1d5db" }}>|</span>
+          <button className="hover:text-gray-900 transition-colors">More</button>
         </div>
       </div>
 
-      {/* PRACTICE TEST BANNER */}
-      <div className="bg-[#1e3a5f] text-white text-center text-xs font-semibold tracking-widest uppercase py-1.5">
+      {/* ── PRACTICE TEST BANNER ── */}
+      <div
+        style={{
+          background: "#1e3a5f",
+          color: "#fff",
+          textAlign: "center",
+          fontSize: 11,
+          fontWeight: 700,
+          letterSpacing: "0.12em",
+          textTransform: "uppercase",
+          padding: "6px 0",
+        }}
+      >
         This is a practice test
       </div>
 
-      {/* MAIN CONTENT */}
+      {/* ── MAIN CONTENT ── */}
       <div className="flex flex-1 overflow-hidden">
 
-        {/* LEFT PANEL - Passage */}
-        <div className="flex-1 overflow-y-auto px-10 py-8 border-r border-gray-200">
+        {/* LEFT — passage */}
+        <div
+          className="overflow-y-auto"
+          style={{ flex: "0 0 50%", padding: "32px 40px", background: "#fff" }}
+        >
           {question.passage ? (
-            <p className="text-gray-900 text-[15px] leading-[1.75] whitespace-pre-wrap">
+            <p
+              style={{
+                fontSize: 15,
+                lineHeight: 1.8,
+                color: "#111827",
+                fontWeight: 400,
+                margin: 0,
+              }}
+            >
               {question.passage}
             </p>
           ) : (
-            <div className="flex items-center justify-center h-full text-gray-300 text-sm">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", color: "#9ca3af", fontSize: 14 }}>
               No passage for this question
             </div>
           )}
         </div>
 
-        {/* CENTER HANDLE */}
-        <div className="relative flex items-center justify-center w-5 border-r border-l border-gray-200 bg-gray-50 flex-shrink-0 cursor-col-resize">
-          <div className="flex flex-col gap-0.5">
-            <div className="w-1 h-1 rounded-full bg-gray-400" />
-            <div className="w-1 h-1 rounded-full bg-gray-400" />
-            <div className="w-1 h-1 rounded-full bg-gray-400" />
-          </div>
+        {/* CENTER divider */}
+        <div
+          style={{
+            width: 20,
+            background: "#f9fafb",
+            borderLeft: "1px solid #e5e7eb",
+            borderRight: "1px solid #e5e7eb",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: "col-resize",
+            flexShrink: 0,
+          }}
+        >
+          <DividerIcon />
         </div>
 
-        {/* RIGHT PANEL - Question + Answers */}
-        <div className="flex-1 overflow-y-auto flex flex-col">
+        {/* RIGHT — question + answers */}
+        <div className="flex-1 overflow-y-auto flex flex-col" style={{ background: "#fff" }}>
 
           {/* Question header row */}
-          <div className="flex items-center justify-between px-6 pt-4 pb-3 border-b border-gray-100">
-            <div className="flex items-center gap-3">
-              <span className="flex items-center justify-center w-7 h-7 bg-gray-900 text-white text-sm font-bold rounded-sm">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "14px 24px 10px",
+              borderBottom: "1px solid #f3f4f6",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+              {/* Question number badge — dark square */}
+              <span
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: 28,
+                  height: 28,
+                  background: "#111827",
+                  color: "#fff",
+                  fontSize: 13,
+                  fontWeight: 700,
+                  borderRadius: 4,
+                  flexShrink: 0,
+                }}
+              >
                 {currentQuestion}
               </span>
+              {/* Mark for review */}
               <button
                 onClick={onToggleMark}
-                className={`flex items-center gap-1.5 text-xs font-medium transition-colors ${
-                  isMarked ? "text-[#1e3a5f]" : "text-gray-500 hover:text-gray-700"
-                }`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 5,
+                  fontSize: 13,
+                  fontWeight: 500,
+                  color: isMarked ? "#1a56db" : "#6b7280",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  padding: 0,
+                }}
               >
-                <svg
-                  viewBox="0 0 24 24"
-                  className="w-4 h-4"
-                  fill={isMarked ? "currentColor" : "none"}
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
-                </svg>
+                <SmallBookmarkIcon />
                 Mark for Review
               </button>
             </div>
-            <button className="flex items-center justify-center w-7 h-7 rounded border border-gray-300 text-xs font-bold text-gray-600 hover:bg-gray-50">
-              A<sub className="text-[8px]">Z</sub>
+
+            {/* Annotation/AZ icon — top right of question panel */}
+            <button title="Annotate" style={{ background: "none", border: "none", cursor: "pointer", padding: 0 }}>
+              <AnnotationIcon />
             </button>
           </div>
 
           {/* Question text */}
-          <div className="px-6 pt-4 pb-5">
-            <p className="text-gray-900 text-[15px] leading-relaxed">{question.text}</p>
+          <div style={{ padding: "16px 24px 12px" }}>
+            <p style={{ fontSize: 15, color: "#111827", lineHeight: 1.65, margin: 0, fontWeight: 400 }}>
+              {question.text}
+            </p>
           </div>
 
           {/* Answer choices */}
-          <div className="px-6 pb-6 space-y-2.5">
+          <div style={{ padding: "4px 24px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
             {question.choices.map((choice) => {
               const isSelected = selectedAnswer === choice.letter;
               return (
                 <button
                   key={choice.letter}
                   onClick={() => onSelectAnswer(choice.letter)}
-                  className={`w-full flex items-center gap-0 rounded border text-left transition-all group ${
-                    isSelected
-                      ? "border-[#1e3a5f] bg-white"
-                      : "border-gray-300 bg-white hover:border-gray-400"
-                  }`}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    width: "100%",
+                    minHeight: 52,
+                    border: isSelected ? "2px solid #111827" : "1.5px solid #d1d5db",
+                    borderRadius: 6,
+                    background: "#fff",
+                    cursor: "pointer",
+                    textAlign: "left",
+                    transition: "border-color 0.12s, background 0.12s",
+                    outline: "none",
+                    gap: 0,
+                    padding: 0,
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) (e.currentTarget as HTMLButtonElement).style.borderColor = "#6b7280";
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) (e.currentTarget as HTMLButtonElement).style.borderColor = "#d1d5db";
+                  }}
                 >
                   {/* Letter circle */}
-                  <div className="flex-shrink-0 flex items-center justify-center w-11 h-12">
+                  <div style={{ width: 52, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     <span
-                      className={`flex items-center justify-center w-7 h-7 rounded-full border-2 text-sm font-semibold transition-colors ${
-                        isSelected
-                          ? "border-[#1e3a5f] bg-[#1e3a5f] text-white"
-                          : "border-gray-400 text-gray-700 group-hover:border-gray-600"
-                      }`}
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 30,
+                        height: 30,
+                        borderRadius: "50%",
+                        border: isSelected ? "2px solid #111827" : "1.5px solid #6b7280",
+                        background: isSelected ? "#111827" : "#fff",
+                        color: isSelected ? "#fff" : "#111827",
+                        fontSize: 13,
+                        fontWeight: 600,
+                        transition: "all 0.12s",
+                      }}
                     >
                       {choice.letter}
                     </span>
                   </div>
 
                   {/* Answer text */}
-                  <span className={`flex-1 py-3 text-[14px] leading-snug pr-2 ${isSelected ? "text-gray-900" : "text-gray-800"}`}>
+                  <span
+                    style={{
+                      flex: 1,
+                      fontSize: 14,
+                      color: "#111827",
+                      lineHeight: 1.45,
+                      padding: "10px 8px 10px 0",
+                    }}
+                  >
                     {choice.text}
                   </span>
 
-                  {/* Right icon (accessibility / reference) */}
-                  <div className="flex-shrink-0 flex items-center justify-center w-10 h-12">
-                    <span
-                      className={`flex items-center justify-center w-6 h-6 rounded-full border text-[10px] font-bold transition-colors ${
-                        isSelected
-                          ? "border-[#1e3a5f] text-[#1e3a5f]"
-                          : "border-gray-300 text-gray-400 group-hover:border-gray-400"
-                      }`}
-                    >
-                      {choice.letter}
-                      <span className="text-[6px] leading-none">+</span>
-                    </span>
+                  {/* Right reference icon */}
+                  <div style={{ width: 44, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <AnswerRefIcon letter={choice.letter} selected={isSelected} />
                   </div>
                 </button>
               );
@@ -219,42 +400,83 @@ export default function TestScreen({
         </div>
       </div>
 
-      {/* BOTTOM BAR */}
-      <div className="flex items-center justify-between px-4 h-14 bg-white border-t border-gray-200 flex-shrink-0">
-        {/* Left: user name */}
-        <span className="text-sm font-medium text-gray-700 w-40 truncate">Test Taker</span>
+      {/* ── BOTTOM BAR ── */}
+      <div
+        style={{
+          height: 56,
+          background: "#fff",
+          borderTop: "1px solid #e5e7eb",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 20px",
+          flexShrink: 0,
+        }}
+      >
+        {/* Left: username */}
+        <span style={{ fontSize: 13, fontWeight: 400, color: "#374151", minWidth: 120 }}>
+          abbvsss Abdusattorov
+        </span>
 
-        {/* Center: question palette trigger */}
+        {/* Center: Question palette trigger */}
         <button
           onClick={() => setShowPalette(true)}
-          className="flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold px-5 py-2 rounded-full transition-colors"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 8,
+            background: "#111827",
+            color: "#fff",
+            fontSize: 13,
+            fontWeight: 600,
+            padding: "7px 20px",
+            borderRadius: 9999,
+            border: "none",
+            cursor: "pointer",
+          }}
         >
           Question {currentQuestion} of {totalQuestions}
-          <svg viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
-            <path fillRule="evenodd" d="M14.707 12.707a1 1 0 01-1.414 0L10 9.414l-3.293 3.293a1 1 0 01-1.414-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 010 1.414z" clipRule="evenodd" />
-          </svg>
+          <ChevronUpIcon />
         </button>
 
-        {/* Right: nav buttons */}
-        <div className="flex items-center gap-2 w-40 justify-end">
+        {/* Right: Back + Next */}
+        <div style={{ display: "flex", alignItems: "center", gap: 8, minWidth: 120, justifyContent: "flex-end" }}>
           {!isFirst && (
             <button
               onClick={onPrevious}
-              className="px-5 py-2 rounded-full border border-gray-300 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+              style={{
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#374151",
+                padding: "7px 18px",
+                borderRadius: 9999,
+                border: "1.5px solid #d1d5db",
+                background: "#fff",
+                cursor: "pointer",
+              }}
             >
               Back
             </button>
           )}
           <button
             onClick={onNext}
-            className="px-6 py-2 rounded-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition-colors"
+            style={{
+              fontSize: 13,
+              fontWeight: 600,
+              color: "#fff",
+              padding: "7px 22px",
+              borderRadius: 9999,
+              border: "none",
+              background: isLast ? "#059669" : "#1a56db",
+              cursor: "pointer",
+            }}
           >
             {isLast ? "Review" : "Next"}
           </button>
         </div>
       </div>
 
-      {/* PALETTE MODAL */}
+      {/* Palette modal */}
       {showPalette && (
         <QuestionPaletteModal
           moduleName={module.name}
