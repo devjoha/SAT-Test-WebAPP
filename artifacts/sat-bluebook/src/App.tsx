@@ -5,12 +5,18 @@ import StartScreen from "./screens/StartScreen";
 import BreakScreen from "./screens/BreakScreen";
 import ReviewScreen from "./screens/ReviewScreen";
 import DoneScreen from "./screens/DoneScreen";
+import ModuleOverScreen from "./screens/ModuleOverScreen";
 
-type Screen = "start" | "test" | "break" | "review" | "done";
+type Screen = "start" | "test" | "break" | "review" | "moduleOver" | "done";
 
 export interface ModuleState {
   answers: Record<number, string>;
   flagged: Set<number>;
+  crossedOut: Record<number, Set<string>>;
+}
+
+function makeEmptyModuleState(): ModuleState {
+  return { answers: {}, flagged: new Set<number>(), crossedOut: {} };
 }
 
 export default function App() {
@@ -20,7 +26,7 @@ export default function App() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [timerHidden, setTimerHidden] = useState(false);
   const [moduleStates, setModuleStates] = useState<ModuleState[]>(
-    modules.map(() => ({ answers: {}, flagged: new Set<number>() }))
+    modules.map(() => makeEmptyModuleState())
   );
 
   const currentModule = modules[moduleIndex];
@@ -37,7 +43,7 @@ export default function App() {
       setTimeRemaining((t) => {
         if (t <= 1) {
           clearInterval(id);
-          handleModuleEnd();
+          triggerModuleOver();
           return 0;
         }
         return t - 1;
@@ -46,14 +52,18 @@ export default function App() {
     return () => clearInterval(id);
   }, [screen, timeRemaining]);
 
+  function triggerModuleOver() {
+    setScreen("moduleOver");
+    setTimeout(() => {
+      const isLast = moduleIndex === modules.length - 1;
+      if (isLast) setScreen("done");
+      else setScreen("break");
+    }, 3000);
+  }
+
   function handleStart() {
     resetTimer(currentModule.durationMinutes);
     setScreen("test");
-  }
-
-  function handleModuleEnd() {
-    const isLastModule = moduleIndex === modules.length - 1;
-    setScreen(isLastModule ? "done" : "break");
   }
 
   function handleBreakContinue() {
@@ -65,15 +75,16 @@ export default function App() {
   }
 
   function handleSubmit() {
-    handleModuleEnd();
+    triggerModuleOver();
   }
 
   function handleSelectAnswer(letter: string) {
     setModuleStates((prev) => {
       const updated = [...prev];
+      const cur = updated[moduleIndex];
       updated[moduleIndex] = {
-        ...updated[moduleIndex],
-        answers: { ...updated[moduleIndex].answers, [currentQuestion]: letter },
+        ...cur,
+        answers: { ...cur.answers, [currentQuestion]: letter },
       };
       return updated;
     });
@@ -83,12 +94,24 @@ export default function App() {
     setModuleStates((prev) => {
       const updated = [...prev];
       const newFlagged = new Set(updated[moduleIndex].flagged);
-      if (newFlagged.has(currentQuestion)) {
-        newFlagged.delete(currentQuestion);
-      } else {
-        newFlagged.add(currentQuestion);
-      }
+      if (newFlagged.has(currentQuestion)) newFlagged.delete(currentQuestion);
+      else newFlagged.add(currentQuestion);
       updated[moduleIndex] = { ...updated[moduleIndex], flagged: newFlagged };
+      return updated;
+    });
+  }
+
+  function handleToggleCrossOut(qNum: number, letter: string) {
+    setModuleStates((prev) => {
+      const updated = [...prev];
+      const cur = updated[moduleIndex];
+      const qCrossed = new Set(cur.crossedOut[qNum] ?? []);
+      if (qCrossed.has(letter)) qCrossed.delete(letter);
+      else qCrossed.add(letter);
+      updated[moduleIndex] = {
+        ...cur,
+        crossedOut: { ...cur.crossedOut, [qNum]: qCrossed },
+      };
       return updated;
     });
   }
@@ -97,10 +120,11 @@ export default function App() {
     setScreen("start");
     setModuleIndex(0);
     setCurrentQuestion(1);
-    setModuleStates(modules.map(() => ({ answers: {}, flagged: new Set<number>() })));
+    setModuleStates(modules.map(() => makeEmptyModuleState()));
   }
 
   if (screen === "start") return <StartScreen onStart={handleStart} />;
+  if (screen === "moduleOver") return <ModuleOverScreen />;
   if (screen === "break") return <BreakScreen onContinue={handleBreakContinue} />;
   if (screen === "done") {
     const totalAnswered = moduleStates.reduce((a, ms) => a + Object.keys(ms.answers).length, 0);
@@ -128,11 +152,13 @@ export default function App() {
       currentQuestion={currentQuestion}
       answers={currentState.answers}
       flagged={currentState.flagged}
+      crossedOut={currentState.crossedOut[currentQuestion] ?? new Set()}
       timeRemaining={timeRemaining}
       timerHidden={timerHidden}
       onToggleTimer={() => setTimerHidden((h) => !h)}
       onSelectAnswer={handleSelectAnswer}
       onToggleMark={handleToggleMark}
+      onToggleCrossOut={(letter) => handleToggleCrossOut(currentQuestion, letter)}
       onPrevious={() => currentQuestion > 1 && setCurrentQuestion((n) => n - 1)}
       onNext={() => {
         if (currentQuestion < currentModule.questions.length) setCurrentQuestion((n) => n + 1);
