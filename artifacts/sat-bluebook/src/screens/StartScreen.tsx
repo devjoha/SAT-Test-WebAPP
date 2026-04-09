@@ -18,49 +18,212 @@ export default function StartScreen({ onStart }: StartScreenProps) {
   }
 
   return (
-    <div className="fixed inset-0 bg-[#f5f5f0] flex items-center justify-center" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
-      <div className="w-full max-w-sm bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-        {/* Header */}
-        <div className="bg-[#1e3a5f] text-center px-8 py-7">
-          <p className="text-blue-300 text-xs font-semibold uppercase tracking-widest mb-2">College Board</p>
-          <h1 className="text-white text-2xl font-bold tracking-tight">Digital SAT Suite</h1>
-          <p className="text-blue-200 text-sm mt-1">Powered by Bluebook™</p>
+    <div
+      style={{
+        position: "fixed",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        background: "#fff",
+      }}
+    >
+      {/* Header — matches TestScreen header style */}
+      <header
+        style={{
+          background: "#E6EDF8",
+          borderBottom: "1px solid #c8d5e8",
+          padding: "0 28px",
+          height: 56,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexShrink: 0,
+        }}
+      >
+        {/* Left: CB logo + Bluebook wordmark */}
+        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+          {/* College Board "CB" shield */}
+          <div
+            style={{
+              width: 30,
+              height: 30,
+              background: "#1a1f71",
+              borderRadius: 4,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              flexShrink: 0,
+            }}
+          >
+            <span
+              style={{
+                color: "#fff",
+                fontSize: 13,
+                fontWeight: 900,
+                letterSpacing: "-0.5px",
+                fontFamily: "serif",
+              }}
+            >
+              CB
+            </span>
+          </div>
+          <span
+            style={{
+              fontSize: 17,
+              fontWeight: 700,
+              color: "#1a1f71",
+              letterSpacing: "-0.2px",
+            }}
+          >
+            Bluebook
+          </span>
         </div>
-        {/* Body */}
-        <div className="px-8 py-7">
-          <p className="text-gray-600 text-sm text-center mb-6 leading-relaxed">
-            Enter the start code provided by your test administrator to begin.
+
+        {/* Right: College Board label */}
+        <span style={{ fontSize: 12, color: "#555", letterSpacing: "0.02em" }}>
+          College Board
+        </span>
+      </header>
+
+      {/* Main content */}
+      <main
+        style={{
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "40px 24px",
+          background: "#fff",
+        }}
+      >
+        <div style={{ width: "100%", maxWidth: 440 }}>
+          {/* Title */}
+          <h1
+            style={{
+              fontSize: 26,
+              fontWeight: 700,
+              color: "#1a1f71",
+              margin: "0 0 6px",
+              textAlign: "center",
+            }}
+          >
+            Enter Your Start Code
+          </h1>
+          <p
+            style={{
+              fontSize: 14,
+              color: "#555",
+              textAlign: "center",
+              margin: "0 0 32px",
+              lineHeight: 1.5,
+            }}
+          >
+            Enter the start code given by your test administrator.
           </p>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">
-                Start Code
-              </label>
+
+          <form onSubmit={handleSubmit} noValidate>
+            {/* Input box — matches Bluebook input style */}
+            <div
+              style={{
+                border: error ? "2px solid #c0392b" : "2px solid #1a1f71",
+                borderRadius: 4,
+                padding: "12px 16px",
+                marginBottom: error ? 6 : 20,
+                background: "#fff",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <input
                 type="text"
                 value={code}
-                onChange={(e) => { setCode(e.target.value); setError(""); }}
+                onChange={(e) => { setCode(e.target.value.toUpperCase()); setError(""); }}
                 placeholder="e.g. ABCD1234"
-                className={`w-full px-4 py-3 rounded-lg border text-gray-900 text-center text-base font-mono tracking-widest outline-none transition ${
-                  error ? "border-red-400 ring-2 ring-red-100" : "border-gray-300 focus:border-[#1e3a5f] focus:ring-2 focus:ring-blue-100"
-                }`}
-                maxLength={20}
                 autoFocus
+                maxLength={20}
+                style={{
+                  width: "100%",
+                  border: "none",
+                  outline: "none",
+                  fontSize: 18,
+                  fontWeight: 600,
+                  fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                  color: "#1a1f71",
+                  letterSpacing: "0.12em",
+                  textTransform: "uppercase",
+                  background: "transparent",
+                  textAlign: "center",
+                }}
               />
-              {error && <p className="mt-1.5 text-xs text-red-500">{error}</p>}
             </div>
+
+            {error && (
+              <p
+                style={{
+                  fontSize: 13,
+                  color: "#c0392b",
+                  margin: "0 0 16px",
+                  paddingLeft: 2,
+                }}
+              >
+                {error}
+              </p>
+            )}
+
+            {/* Submit button */}
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-semibold rounded-lg transition-colors text-sm tracking-wide"
+              style={{
+                width: "100%",
+                padding: "13px 0",
+                background: code.trim().length >= 4 ? "#1a1f71" : "#8d92b5",
+                color: "#fff",
+                border: "none",
+                borderRadius: 4,
+                fontSize: 15,
+                fontWeight: 700,
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                cursor: code.trim().length >= 4 ? "pointer" : "default",
+                letterSpacing: "0.03em",
+                transition: "background 0.15s",
+              }}
             >
-              Start Test
+              Continue
             </button>
           </form>
-          <p className="mt-5 text-center text-xs text-gray-400 leading-relaxed">
-            By starting you agree to the testing terms and conditions.
+
+          {/* Disclaimer */}
+          <p
+            style={{
+              fontSize: 12,
+              color: "#888",
+              textAlign: "center",
+              margin: "24px 0 0",
+              lineHeight: 1.5,
+            }}
+          >
+            By continuing, you agree to the College Board's testing terms and conditions.
           </p>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <footer
+        style={{
+          background: "#E6EDF8",
+          borderTop: "1px solid #c8d5e8",
+          height: 44,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        <span style={{ fontSize: 12, color: "#666" }}>
+          © 2025 College Board · Privacy Center · bluebook.collegeboard.org
+        </span>
+      </footer>
     </div>
   );
 }
