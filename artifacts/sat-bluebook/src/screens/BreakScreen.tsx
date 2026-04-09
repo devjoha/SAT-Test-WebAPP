@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface BreakScreenProps {
   breakDurationMinutes?: number;
@@ -13,108 +13,91 @@ function formatTime(secs: number) {
 
 export default function BreakScreen({ breakDurationMinutes = 10, onContinue }: BreakScreenProps) {
   const [remaining, setRemaining] = useState(breakDurationMinutes * 60);
+  const onContinueRef = useRef(onContinue);
+  onContinueRef.current = onContinue;
 
   useEffect(() => {
-    if (remaining <= 0) { onContinue(); return; }
-    const id = setInterval(() => setRemaining((t) => Math.max(0, t - 1)), 1000);
+    const id = setInterval(() => {
+      setRemaining((t) => {
+        if (t <= 1) {
+          clearInterval(id);
+          onContinueRef.current();
+          return 0;
+        }
+        return t - 1;
+      });
+    }, 1000);
     return () => clearInterval(id);
-  }, [remaining, onContinue]);
+  }, []);
+
+  const isLow = remaining < 60;
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: "#1a1a1a",
-        display: "flex",
-        flexDirection: "column",
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-        color: "#fff",
-      }}
-    >
-      {/* Main content area */}
-      <div style={{ flex: 1, display: "flex", alignItems: "flex-start", padding: "60px 80px", gap: 80 }}>
+    <div className="break-screen">
+      <div className="break-main">
         {/* Left: timer */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, flexShrink: 0, paddingTop: 80 }}>
-          <div
-            style={{
-              border: "1.5px solid #555",
-              borderRadius: 4,
-              padding: "24px 36px",
-              textAlign: "center",
-              minWidth: 200,
-            }}
-          >
-            <p style={{ fontSize: 14, color: "#ccc", margin: "0 0 8px", fontWeight: 500 }}>
+        <div className="break-timer-block">
+          <div className="break-timer-box">
+            <p style={{ fontSize: 13, color: "#ccc", margin: "0 0 8px", fontWeight: 500 }}>
               Remaining Break Time:
             </p>
             <p
               style={{
                 fontSize: 52,
                 fontWeight: 700,
-                color: remaining < 60 ? "#ef4444" : "#fff",
+                color: isLow ? "#ef4444" : "#fff",
                 margin: 0,
                 fontVariantNumeric: "tabular-nums",
                 letterSpacing: "0.02em",
+                lineHeight: 1.1,
               }}
             >
               {formatTime(remaining)}
             </p>
           </div>
-
-          <button
-            onClick={onContinue}
-            style={{
-              background: "#f5c518",
-              color: "#111",
-              border: "none",
-              borderRadius: 9999,
-              padding: "10px 28px",
-              fontSize: 14,
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
+          <button className="break-resume-btn" onClick={onContinue}>
             Resume Testing
           </button>
         </div>
 
         {/* Right: instructions */}
-        <div style={{ flex: 1, maxWidth: 480 }}>
-          <h2 style={{ fontSize: 24, fontWeight: 700, color: "#fff", margin: "0 0 12px" }}>
+        <div className="break-instructions">
+          <h2 style={{ fontSize: 22, fontWeight: 700, color: "#fff", margin: "0 0 12px" }}>
             Practice Test Break
           </h2>
-          <p style={{ fontSize: 14, color: "#bbb", lineHeight: 1.65, margin: "0 0 24px" }}>
-            You can resume this practice test as soon as you're ready to move on. On test day, you'll
-            wait until the clock counts down. Read below to see how breaks work on test day.
+          <p style={{ fontSize: 14, color: "#bbb", lineHeight: 1.65, margin: "0 0 22px" }}>
+            You can resume this practice test as soon as you're ready to move on. On test day,
+            you'll wait until the clock counts down. Read below to see how breaks work on test day.
           </p>
 
-          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "0 0 24px" }} />
+          <hr style={{ border: "none", borderTop: "1px solid #444", margin: "0 0 22px" }} />
 
-          <h3 style={{ fontSize: 22, fontWeight: 700, color: "#fff", margin: "0 0 12px" }}>
+          <h3 style={{ fontSize: 19, fontWeight: 700, color: "#fff", margin: "0 0 10px" }}>
             Take a Break: Do Not Close Your Device
           </h3>
-          <p style={{ fontSize: 14, color: "#bbb", lineHeight: 1.65, margin: "0 0 16px" }}>
-            After the break, a <strong style={{ color: "#fff" }}>Resume Testing Now</strong> button
-            will appear and you'll start the next section.
+          <p style={{ fontSize: 14, color: "#bbb", lineHeight: 1.65, margin: "0 0 14px" }}>
+            After the break, a{" "}
+            <strong style={{ color: "#fff" }}>Resume Testing Now</strong> button will appear and
+            you'll start the next section.
           </p>
-          <p style={{ fontSize: 14, fontWeight: 700, color: "#ccc", margin: "0 0 10px" }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "#ccc", margin: "0 0 8px" }}>
             Follow these rules during the break:
           </p>
-          <ol style={{ fontSize: 14, color: "#bbb", lineHeight: 1.8, paddingLeft: 20, margin: 0 }}>
+          <ol style={{ fontSize: 13, color: "#bbb", lineHeight: 1.85, paddingLeft: 18, margin: 0 }}>
             <li>Do not disturb students who are still testing.</li>
             <li>Do not exit the app or close your laptop.</li>
             <li>Do not access phones, smartwatches, textbooks, notes, or the internet.</li>
             <li>Do not eat or drink near any testing device.</li>
-            <li>Do not speak in the testing room; outside the room, do not discuss the exam with anyone.</li>
+            <li>
+              Do not speak in the testing room; outside the room, do not discuss the exam with
+              anyone.
+            </li>
           </ol>
         </div>
       </div>
 
-      {/* Bottom: username */}
-      <div style={{ padding: "16px 24px", borderTop: "1px solid #333" }}>
-        <span style={{ fontSize: 13, color: "#aaa" }}>abbvsss Abdusattorov</span>
-      </div>
+      {/* Footer */}
+      <div className="break-footer">abbvsss Abdusattorov</div>
     </div>
   );
 }
