@@ -158,6 +158,13 @@
   font-size: 11px;
 }
 
+.test-header .tool-item-active {
+  color: #1a4fcf;
+  font-weight: 600;
+  border-bottom: 2px solid #1a4fcf;
+  padding-bottom: 2px;
+}
+
 /* Practice test banner */
 .practice-test-banner {
   background: #1a1f71;

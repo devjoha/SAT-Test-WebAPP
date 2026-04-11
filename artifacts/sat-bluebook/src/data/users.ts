@@ -19,8 +19,8 @@ export const USERS: User[] = [
   {
     username: "shadow",
     password: "sat2026",
-    displayName: "Shadow Qasimbayev",
-    firstName: "Shadow",
+    displayName: "Jahongir Qasimbayev",
+    firstName: "Jahongir",
   },
   // ── Add more students below ──
   // {

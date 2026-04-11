@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Module } from "../data/questions";
 import QuestionPaletteModal from "../components/QuestionPaletteModal";
 import { APP_CONFIG } from "../config";
@@ -7,6 +7,14 @@ function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
   const s = seconds % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
+}
+
+function formatModuleName(name: string): string {
+  if (name.startsWith("Reading and Writing - Module 1")) return "Section 1, Module 1: Reading and Writing";
+  if (name.startsWith("Reading and Writing - Module 2")) return "Section 1, Module 2: Reading and Writing";
+  if (name.startsWith("Math - Module 1")) return "Section 2, Module 1: Math";
+  if (name.startsWith("Math - Module 2")) return "Section 2, Module 2: Math";
+  return name;
 }
 
 const ChevronUp = () => (
@@ -24,8 +32,8 @@ const BookmarkIcon = ({ filled }: { filled: boolean }) => (
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
   </svg>
 );
-const HighlightIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+const AnnotateIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
@@ -36,7 +44,7 @@ const MoreIcon = () => (
   </svg>
 );
 const CalcIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
     <rect x="4" y="2" width="16" height="20" rx="2" />
     <line x1="8" y1="6" x2="16" y2="6" />
     <line x1="8" y1="10" x2="10" y2="10" /><line x1="14" y1="10" x2="16" y2="10" />
@@ -44,6 +52,135 @@ const CalcIcon = () => (
     <line x1="8" y1="18" x2="16" y2="18" />
   </svg>
 );
+const DragDotsIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style={{ opacity: 0.6 }}>
+    <circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/>
+    <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+    <circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/>
+  </svg>
+);
+
+declare global {
+  interface Window {
+    Desmos?: {
+      GraphingCalculator: (el: HTMLElement, opts?: object) => unknown;
+    };
+  }
+}
+
+function DesmosCalculator({ onClose }: { onClose: () => void }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const calcRef = useRef<unknown>(null);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    const existingScript = document.getElementById("desmos-api");
+
+    function initCalc() {
+      if (containerRef.current && window.Desmos) {
+        calcRef.current = window.Desmos.GraphingCalculator(containerRef.current, {
+          keypad: true,
+          expressions: true,
+          settingsMenu: false,
+          expressionsTopbar: true,
+          zoomButtons: true,
+          lockViewport: false,
+        });
+        setLoaded(true);
+      }
+    }
+
+    if (existingScript && window.Desmos) {
+      initCalc();
+    } else if (!existingScript) {
+      const script = document.createElement("script");
+      script.id = "desmos-api";
+      script.src = "https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc26972add0fda6";
+      script.async = true;
+      script.onload = () => initCalc();
+      document.head.appendChild(script);
+    }
+  }, []);
+
+  return (
+    <div
+      style={{
+        position: "absolute",
+        top: 88,
+        left: 20,
+        zIndex: 60,
+        background: "#fff",
+        borderRadius: 4,
+        boxShadow: "0 4px 20px rgba(0,0,0,0.25)",
+        width: 430,
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      {/* Dark header matching the reference */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "7px 10px",
+          background: "#2d2d2d",
+          color: "#fff",
+          gap: 8,
+          cursor: "default",
+          userSelect: "none",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 14, fontWeight: 600 }}>Calculator</span>
+          <DragDotsIcon />
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <button
+            style={{
+              background: "none",
+              border: "1px solid rgba(255,255,255,0.4)",
+              color: "#fff",
+              borderRadius: 3,
+              padding: "2px 10px",
+              fontSize: 12,
+              cursor: "pointer",
+              fontFamily: "inherit",
+            }}
+          >
+            Expand
+          </button>
+          <button
+            onClick={onClose}
+            style={{
+              background: "none",
+              border: "none",
+              color: "#fff",
+              cursor: "pointer",
+              fontSize: 20,
+              lineHeight: 1,
+              padding: "0 2px",
+            }}
+          >
+            ×
+          </button>
+        </div>
+      </div>
+
+      {/* Desmos calculator container */}
+      {!loaded && (
+        <div style={{ height: 480, display: "flex", alignItems: "center", justifyContent: "center", background: "#f5f5f5" }}>
+          <span style={{ fontSize: 13, color: "#888" }}>Loading calculator…</span>
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        style={{ width: "100%", height: 480, display: loaded ? "block" : "none" }}
+      />
+    </div>
+  );
+}
 
 interface TestScreenProps {
   module: Module;
@@ -102,7 +239,7 @@ export default function TestScreen({
       {/* ── HEADER ── */}
       <header className="test-header">
         <div>
-          <div className="section-name">{module.name}</div>
+          <div className="section-name">{formatModuleName(module.name)}</div>
           <button className="directions-btn" onClick={() => setShowDirections(v => !v)}>
             Directions {showDirections ? <ChevronUp /> : <ChevronDown />}
           </button>
@@ -125,12 +262,18 @@ export default function TestScreen({
         <div className="header-right">
           {isMath ? (
             <>
-              <button className="tool-item" onClick={() => setShowCalculator(v => !v)}>
+              <button
+                className={`tool-item${showCalculator ? " tool-item-active" : ""}`}
+                onClick={() => { setShowCalculator(v => !v); setShowReference(false); }}
+              >
                 <CalcIcon />
                 <span>Calculator</span>
               </button>
-              <button className="tool-item" onClick={() => setShowReference(v => !v)}>
-                <span style={{ fontSize: 16, fontWeight: 700, lineHeight: 1 }}>x²</span>
+              <button
+                className={`tool-item${showReference ? " tool-item-active" : ""}`}
+                onClick={() => { setShowReference(v => !v); setShowCalculator(false); }}
+              >
+                <span style={{ fontSize: 17, fontWeight: 700, lineHeight: 1 }}>x²</span>
                 <span>Reference</span>
               </button>
               <button className="tool-item">
@@ -140,7 +283,7 @@ export default function TestScreen({
           ) : (
             <>
               <button className="tool-item">
-                <HighlightIcon /><span>Highlights &amp; Notes</span>
+                <AnnotateIcon /><span>Annotate</span>
               </button>
               <button className="tool-item">
                 <MoreIcon /><span>More</span>
@@ -158,10 +301,14 @@ export default function TestScreen({
         <div style={{ position: "absolute", top: 80, left: 0, right: 0, zIndex: 60, display: "flex", justifyContent: "center", padding: "0 20px" }}>
           <div style={{ background: "#fff", border: "2px solid #f5a623", borderRadius: 4, padding: "22px 28px 18px", maxWidth: 700, width: "100%", boxShadow: "0 6px 24px rgba(0,0,0,0.13)" }}>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "#111", marginBottom: 12 }}>
-              The questions in this section address a number of important reading and writing skills. Each question includes one or more passages, which may include a table or graph. Read each passage and question carefully, and then choose the best answer.
+              {isMath
+                ? "The questions in this section address a number of important math skills. Use of a calculator is permitted for all questions. A reference sheet, calculator, and these directions can be accessed throughout the test."
+                : "The questions in this section address a number of important reading and writing skills. Each question includes one or more passages, which may include a table or graph. Read each passage and question carefully, and then choose the best answer."}
             </p>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "#111", marginBottom: 16 }}>
-              All questions in this section are multiple-choice with four answer choices. Each question has a single best answer.
+              {isMath
+                ? "Unless otherwise indicated, all variables and expressions represent real numbers. Figures are drawn to scale. All figures lie in a plane unless otherwise indicated. The domain of a given function is the set of all real numbers for which the function has defined values."
+                : "All questions in this section are multiple-choice with four answer choices. Each question has a single best answer."}
             </p>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
               <button onClick={() => setShowDirections(false)} style={{ background: "#f5c518", color: "#111", border: "none", borderRadius: 9999, padding: "8px 24px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
@@ -198,7 +345,7 @@ export default function TestScreen({
                 Mark for Review
               </button>
             </div>
-            <button className="abc-btn">APX</button>
+            <button className="abc-btn">ABC</button>
           </div>
 
           <hr className="question-header-separator" />
@@ -285,27 +432,16 @@ export default function TestScreen({
         />
       )}
 
-      {/* ── CALCULATOR OVERLAY ── */}
+      {/* ── DESMOS CALCULATOR ── */}
       {showCalculator && (
-        <div style={{ position: "absolute", top: 88, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 340, overflow: "hidden" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "#1a1f71" }}>
-            <div style={{ display: "flex", gap: 2 }}>
-              <button style={{ background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", padding: "4px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Graphing</button>
-              <button style={{ background: "none", border: "none", color: "#ccc", padding: "4px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12 }}>Scientific</button>
-            </div>
-            <button onClick={() => setShowCalculator(false)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button>
-          </div>
-          <div style={{ height: 240, background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 13, color: "#9ca3af" }}>Desmos Graphing Calculator</span>
-          </div>
-        </div>
+        <DesmosCalculator onClose={() => setShowCalculator(false)} />
       )}
 
       {/* ── REFERENCE OVERLAY ── */}
       {showReference && (
-        <div style={{ position: "absolute", top: 88, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 380, maxHeight: "72vh", overflowY: "auto" }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#111827", color: "#fff", position: "sticky", top: 0 }}>
-            <span style={{ fontSize: 14, fontWeight: 700 }}>Reference Sheet</span>
+        <div style={{ position: "absolute", top: 88, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 4, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 420, maxHeight: "76vh", overflowY: "auto" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#1a1a1a", color: "#fff", position: "sticky", top: 0, zIndex: 1 }}>
+            <span style={{ fontSize: 14, fontWeight: 700 }}>Reference</span>
             <button onClick={() => setShowReference(false)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button>
           </div>
           <div style={{ padding: "16px 20px 20px", fontSize: 13, color: "#111", lineHeight: 1.8 }}>
@@ -314,22 +450,25 @@ export default function TestScreen({
                 { label: "Circle", f: "A = πr²", s: "C = 2πr" },
                 { label: "Rectangle", f: "A = lw" },
                 { label: "Triangle", f: "A = ½bh" },
-                { label: "Pythagorean", f: "c² = a² + b²" },
-                { label: "Box", f: "V = lwh" },
+                { label: "Pythagorean Theorem", f: "c² = a² + b²" },
+                { label: "Rectangular Box", f: "V = lwh" },
                 { label: "Cylinder", f: "V = πr²h" },
                 { label: "Sphere", f: "V = 4/3πr³" },
                 { label: "Cone", f: "V = 1/3πr²h" },
+                { label: "Pyramid", f: "V = 1/3lwh" },
               ].map(({ f, s, label }) => (
-                <div key={label} style={{ border: "1px solid #e5e7eb", borderRadius: 6, padding: "8px 12px" }}>
-                  <div style={{ fontWeight: 700, color: "#6b7280", fontSize: 10, marginBottom: 3, textTransform: "uppercase" }}>{label}</div>
-                  <div style={{ fontFamily: "Georgia, serif" }}>{f}</div>
+                <div key={label} style={{ border: "1px solid #e5e7eb", borderRadius: 4, padding: "8px 12px" }}>
+                  <div style={{ fontWeight: 600, color: "#555", fontSize: 10, marginBottom: 3, textTransform: "uppercase", letterSpacing: "0.05em" }}>{label}</div>
+                  <div style={{ fontFamily: "Georgia, serif", fontSize: 14 }}>{f}</div>
                   {s && <div style={{ fontFamily: "Georgia, serif", color: "#6b7280", fontSize: 12 }}>{s}</div>}
                 </div>
               ))}
             </div>
-            <p style={{ marginBottom: 6, fontSize: 13 }}>The number of degrees of arc in a circle is 360.</p>
-            <p style={{ marginBottom: 6, fontSize: 13 }}>The number of radians of arc in a circle is 2π.</p>
-            <p style={{ fontSize: 13 }}>The sum of the measures in degrees of the angles of a triangle is 180.</p>
+            <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: 12, fontSize: 13 }}>
+              <p style={{ marginBottom: 6 }}>The number of degrees of arc in a circle is 360.</p>
+              <p style={{ marginBottom: 6 }}>The number of radians of arc in a circle is 2π.</p>
+              <p>The sum of the measures in degrees of the angles of a triangle is 180.</p>
+            </div>
           </div>
         </div>
       )}
