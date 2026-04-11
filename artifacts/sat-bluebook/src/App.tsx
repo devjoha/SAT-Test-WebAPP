@@ -29,8 +29,8 @@ export default function App() {
     modules.map(() => makeEmptyModuleState())
   );
 
-  const currentModule = modules[moduleIndex];
-  const currentState = moduleStates[moduleIndex];
+  const currentModule = modules[moduleIndex] ?? modules[0];
+  const currentState = moduleStates[moduleIndex] ?? makeEmptyModuleState();
 
   const resetTimer = useCallback((minutes: number) => {
     setTimeRemaining(minutes * 60);
@@ -55,26 +55,25 @@ export default function App() {
   // Break only shows between R&W section (indices 0–1) and Math section (indices 2–3).
   // Index 0 → 1: no break (same section), Index 1 → 2: break, Index 2 → 3: no break, Index 3: done.
   function triggerModuleOver() {
+    const capturedIndex = moduleIndex;
     setScreen("moduleOver");
     setTimeout(() => {
-      setModuleIndex((idx) => {
-        const isLast = idx === modules.length - 1;
-        if (isLast) {
-          setScreen("done");
-          return idx;
-        }
-        const needsBreak = idx === 1; // between R&W M2 and Math M1
-        if (needsBreak) {
-          setScreen("break");
-          return idx;
-        }
-        // Advance directly to next module
-        const nextIdx = idx + 1;
-        setCurrentQuestion(1);
-        resetTimer(modules[nextIdx].durationMinutes);
-        setScreen("test");
-        return nextIdx;
-      });
+      const isLast = capturedIndex === modules.length - 1;
+      if (isLast) {
+        setScreen("done");
+        return;
+      }
+      const needsBreak = capturedIndex === 1; // between R&W M2 and Math M1
+      if (needsBreak) {
+        setScreen("break");
+        return;
+      }
+      // Advance directly to next module (no break within same section)
+      const nextIdx = capturedIndex + 1;
+      setModuleIndex(nextIdx);
+      setCurrentQuestion(1);
+      resetTimer(modules[nextIdx].durationMinutes);
+      setScreen("test");
     }, 3000);
   }
 
