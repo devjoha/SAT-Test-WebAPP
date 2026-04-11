@@ -52,12 +52,29 @@ export default function App() {
     return () => clearInterval(id);
   }, [screen, timeRemaining]);
 
+  // Break only shows between R&W section (indices 0–1) and Math section (indices 2–3).
+  // Index 0 → 1: no break (same section), Index 1 → 2: break, Index 2 → 3: no break, Index 3: done.
   function triggerModuleOver() {
     setScreen("moduleOver");
     setTimeout(() => {
-      const isLast = moduleIndex === modules.length - 1;
-      if (isLast) setScreen("done");
-      else setScreen("break");
+      setModuleIndex((idx) => {
+        const isLast = idx === modules.length - 1;
+        if (isLast) {
+          setScreen("done");
+          return idx;
+        }
+        const needsBreak = idx === 1; // between R&W M2 and Math M1
+        if (needsBreak) {
+          setScreen("break");
+          return idx;
+        }
+        // Advance directly to next module
+        const nextIdx = idx + 1;
+        setCurrentQuestion(1);
+        resetTimer(modules[nextIdx].durationMinutes);
+        setScreen("test");
+        return nextIdx;
+      });
     }, 3000);
   }
 
