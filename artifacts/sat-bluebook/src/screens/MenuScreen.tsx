@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { APP_CONFIG } from "../config";
+import { type User } from "../data/users";
 
 const BLUE = "#3b3ff2";
 
 const BluebookLogoSmall = () => (
   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
     <svg width="18" height="18" viewBox="0 0 32 32" fill="none">
-      <path d="M16 2 L18.5 10 L27 10 L20.5 15.5 L23 24 L16 19 L9 24 L11.5 15.5 L5 10 L13.5 10 Z" fill={BLUE}/>
+      <path d="M16 1 C15.2 8.5 8.5 15.2 1 16 C8.5 16.8 15.2 23.5 16 31 C16.8 23.5 23.5 16.8 31 16 C23.5 15.2 16.8 8.5 16 1 Z" fill={BLUE}/>
     </svg>
     <span style={{ fontSize: 17, fontWeight: 700, color: "#111", letterSpacing: "-0.3px", fontFamily: "'Georgia', serif" }}>
       Bluebook™
@@ -78,14 +78,15 @@ const CheckIcon = () => (
 );
 
 interface MenuScreenProps {
+  user: User;
   onStartTest: () => void;
 }
 
-export default function MenuScreen({ onStartTest }: MenuScreenProps) {
+export default function MenuScreen({ user, onStartTest }: MenuScreenProps) {
   const [yourTestsTab, setYourTestsTab] = useState<"active" | "past">("active");
   const [practiceTab, setPracticeTab] = useState<"active" | "past">("active");
 
-  const firstName = APP_CONFIG.studentName.split(" ")[0];
+  const firstName = user.firstName;
 
   const TabButton = ({
     label,
@@ -146,7 +147,7 @@ export default function MenuScreen({ onStartTest }: MenuScreenProps) {
           <BluebookLogoSmall />
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <span style={{ fontSize: 14, fontWeight: 500, color: "#333" }}>
-              {APP_CONFIG.studentName}
+              {user.displayName}
             </span>
             <AvatarIcon />
           </div>

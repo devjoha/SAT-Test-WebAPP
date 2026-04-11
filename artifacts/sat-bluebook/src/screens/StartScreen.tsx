@@ -2,12 +2,13 @@ import { useRef, useState } from "react";
 
 interface StartScreenProps {
   onStart: (code: string) => void;
+  onBack: () => void;
 }
 
 const CODE_LENGTH = 6;
 const BG = "#cdd8c8";
 
-export default function StartScreen({ onStart }: StartScreenProps) {
+export default function StartScreen({ onStart, onBack }: StartScreenProps) {
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -105,6 +106,7 @@ export default function StartScreen({ onStart }: StartScreenProps) {
         </button>
 
         <button
+          onClick={onBack}
           style={{
             background: "none",
             border: "none",
