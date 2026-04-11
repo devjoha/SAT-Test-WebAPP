@@ -57,7 +57,9 @@ These files control what the user sees at each step of the test.
 
 | File | Screen | When it appears |
 |------|--------|-----------------|
-| `src/screens/StartScreen.tsx` | Start Code entry page | First thing the user sees |
+| `src/screens/LoginScreen.tsx` | Sign In page | First thing the user sees |
+| `src/screens/MenuScreen.tsx` | Dashboard / Main Menu | After signing in |
+| `src/screens/StartScreen.tsx` | Start Code entry page | After clicking "Full-Length Practice" |
 | `src/screens/TestScreen.tsx` | The actual test | While answering questions |
 | `src/screens/ReviewScreen.tsx` | Review your answers | Before submitting a module |
 | `src/screens/BreakScreen.tsx` | Break countdown | Between R&W and Math |

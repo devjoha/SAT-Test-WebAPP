@@ -1,5 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { modules } from "./data/questions";
+import LoginScreen from "./screens/LoginScreen";
+import MenuScreen from "./screens/MenuScreen";
 import TestScreen from "./screens/TestScreen";
 import StartScreen from "./screens/StartScreen";
 import BreakScreen from "./screens/BreakScreen";
@@ -7,7 +9,7 @@ import ReviewScreen from "./screens/ReviewScreen";
 import DoneScreen from "./screens/DoneScreen";
 import ModuleOverScreen from "./screens/ModuleOverScreen";
 
-type Screen = "start" | "test" | "break" | "review" | "moduleOver" | "done";
+type Screen = "login" | "menu" | "start" | "test" | "break" | "review" | "moduleOver" | "done";
 
 export interface ModuleState {
   answers: Record<number, string>;
@@ -20,7 +22,7 @@ function makeEmptyModuleState(): ModuleState {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("start");
+  const [screen, setScreen] = useState<Screen>("login");
   const [moduleIndex, setModuleIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -133,12 +135,14 @@ export default function App() {
   }
 
   function handleRestart() {
-    setScreen("start");
+    setScreen("menu");
     setModuleIndex(0);
     setCurrentQuestion(1);
     setModuleStates(modules.map(() => makeEmptyModuleState()));
   }
 
+  if (screen === "login") return <LoginScreen onLogin={() => setScreen("menu")} />;
+  if (screen === "menu") return <MenuScreen onStartTest={() => setScreen("start")} />;
   if (screen === "start") return <StartScreen onStart={handleStart} />;
   if (screen === "moduleOver") return <ModuleOverScreen />;
   if (screen === "break") return <BreakScreen onContinue={handleBreakContinue} />;
