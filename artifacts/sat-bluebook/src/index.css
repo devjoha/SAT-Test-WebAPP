@@ -75,35 +75,35 @@
 }
 
 .test-header {
-  background-color: #E6EDF8;
-  padding: 10px 20px;
+  background-color: #ffffff;
+  padding: 8px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #d1d5db;
   flex-shrink: 0;
-  min-height: 70px;
+  min-height: 66px;
 }
 
 .test-header .section-name {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
-  color: #333;
+  color: #111;
   line-height: 1.2;
 }
 
 .test-header .directions-btn {
   background: none;
   border: none;
-  color: #1a1f71;
-  font-weight: bold;
+  color: #111;
+  font-weight: 400;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   font-size: 14px;
   padding: 0;
-  margin-top: 4px;
+  margin-top: 3px;
 }
 
 .test-header .timer-block {
@@ -112,9 +112,10 @@
 
 .test-header .timer-value {
   font-size: 22px;
-  font-weight: bold;
+  font-weight: 700;
   display: block;
   color: #111;
+  letter-spacing: 0.02em;
 }
 
 .test-header .timer-value.low-time {
@@ -122,21 +123,22 @@
 }
 
 .test-header .hide-btn {
-  background: #e5e7eb;
-  border: 1px solid #999;
-  padding: 2px 14px;
-  border-radius: 15px;
-  font-size: 12px;
+  background: white;
+  border: 1px solid #9ca3af;
+  padding: 2px 18px;
+  border-radius: 9999px;
+  font-size: 13px;
   cursor: pointer;
   margin-top: 4px;
+  color: #111;
 }
 
 .test-header .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 18px;
   font-size: 13px;
-  color: #555;
+  color: #333;
 }
 
 .test-header .tool-item {
@@ -145,11 +147,27 @@
   align-items: center;
   gap: 2px;
   cursor: pointer;
-  color: #555;
+  color: #333;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
 }
 
 .test-header .tool-item span {
   font-size: 11px;
+}
+
+/* Practice test banner */
+.practice-test-banner {
+  background: #1a1f71;
+  color: #fff;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 5px 20px;
+  flex-shrink: 0;
 }
 
 /* Main area */
@@ -176,7 +194,6 @@
   background: white;
 }
 
-/* For single-pane (math): give generous left padding */
 .test-right-pane.full-width {
   padding-left: 48px;
   padding-right: 48px;
@@ -213,24 +230,35 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 0;
+  background: #f5f5f5;
+  padding: 10px 12px;
+  border-radius: 4px 4px 0 0;
+}
+
+.question-header-separator {
+  border: none;
+  border-top: 2px dashed #bbb;
+  margin: 0 0 16px;
 }
 
 .question-number {
-  background: #333;
+  background: #1a1a1a;
   color: white;
   padding: 5px 12px;
-  font-weight: bold;
-  border-radius: 4px;
+  font-weight: 700;
+  border-radius: 3px;
   font-size: 15px;
+  min-width: 36px;
+  text-align: center;
 }
 
 .mark-review-btn {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   font-size: 14px;
-  color: #444;
+  color: #333;
   background: none;
   border: none;
   cursor: pointer;
@@ -242,49 +270,63 @@
   color: #c0392b;
 }
 
-.abc-label {
-  color: #1a1f71;
-  font-weight: bold;
-  font-size: 15px;
+.abc-btn {
+  background: #1a4fcf;
+  color: white;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: none;
   cursor: pointer;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.05em;
+  font-family: inherit;
 }
 
 .question-text {
   margin-bottom: 20px;
-  font-weight: 500;
+  font-weight: 400;
   font-size: 16px;
-  line-height: 1.6;
+  line-height: 1.65;
+  padding-top: 16px;
 }
 
-/* Answer options */
+/* Answer option rows — outer wrapper so cross-out circle is OUTSIDE the box */
 .option-container {
-  margin-top: 8px;
+  margin-top: 6px;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  gap: 10px;
 }
 
 .option {
   display: flex;
   align-items: center;
-  border: 1px solid #d1d5db;
-  border-radius: 10px;
-  padding: 15px;
-  margin-bottom: 12px;
+  border: 1.5px solid #c8cdd6;
+  border-radius: 8px;
+  padding: 14px 16px;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.12s, border-color 0.12s;
   background: white;
+  flex: 1;
 }
 
 .option:hover:not(.crossed) {
   background-color: #f0f4ff;
+  border-color: #a0aec0;
 }
 
 .option.selected {
-  border: 2px solid #1a1f71;
-  background-color: #f0f4ff;
+  border: 2px solid #1a4fcf;
+  background-color: white;
 }
 
 .option.crossed {
-  background-color: #f9fafb;
+  background-color: white;
   cursor: default;
 }
 
@@ -297,27 +339,29 @@
   width: 30px;
   height: 30px;
   min-width: 30px;
-  border: 1px solid #333;
+  border: 1.5px solid #555;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-right: 15px;
-  font-weight: bold;
+  margin-right: 14px;
+  font-weight: 600;
   font-size: 14px;
   background: white;
   color: #333;
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.12s, color 0.12s;
 }
 
 .option.selected .option-letter {
-  background: #1a1f71;
+  background: #1a4fcf;
   color: white;
-  border-color: #1a1f71;
+  border-color: #1a4fcf;
 }
 
 .option.crossed .option-letter {
-  opacity: 0.35;
+  opacity: 0.3;
+  border-color: #aaa;
+  color: #aaa;
 }
 
 .option-text {
@@ -326,25 +370,58 @@
   color: #111;
 }
 
-/* Undo button for crossed-out */
+/* Cross-out indicator circle (outside the option box) */
+.crossout-circle {
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  border: 1.5px solid #9ca3af;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 13px;
+  color: #6b7280;
+  background: white;
+  cursor: pointer;
+  position: relative;
+  overflow: visible;
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.crossout-circle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -2px;
+  right: -2px;
+  height: 1.5px;
+  background: #6b7280;
+  transform: translateY(-50%);
+  border-radius: 1px;
+}
+
+/* Undo button for crossed-out — plain text style */
 .undo-btn {
   background: none;
-  border: 1.5px solid #f5a623;
-  border-radius: 4px;
-  color: #92400e;
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 10px;
+  border: none;
+  color: #111;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0 4px;
   cursor: pointer;
   font-family: inherit;
-  margin-left: 10px;
+  text-decoration: underline;
   flex-shrink: 0;
+  white-space: nowrap;
 }
 
 /* Footer */
 .test-footer {
-  background-color: #E6EDF8;
-  padding: 12px 20px;
+  background-color: #ffffff;
+  padding: 10px 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -354,15 +431,15 @@
 
 .user-name {
   font-size: 14px;
-  color: #444;
+  color: #333;
   font-weight: 500;
 }
 
 .question-nav-pill {
   background: #1e1e1e;
   color: white;
-  padding: 6px 16px;
-  border-radius: 5px;
+  padding: 7px 18px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 600;
@@ -383,9 +460,9 @@
   background: white;
   border: 1.5px solid #6b7280;
   color: #374151;
-  padding: 7px 22px;
-  border-radius: 20px;
-  font-weight: bold;
+  padding: 7px 24px;
+  border-radius: 9999px;
+  font-weight: 700;
   cursor: pointer;
   font-size: 14px;
   font-family: inherit;
@@ -395,9 +472,9 @@
   background-color: #4b66f1;
   color: white;
   border: none;
-  padding: 8px 30px;
-  border-radius: 20px;
-  font-weight: bold;
+  padding: 8px 32px;
+  border-radius: 9999px;
+  font-weight: 700;
   cursor: pointer;
   font-size: 14px;
   font-family: inherit;
@@ -409,7 +486,6 @@
 
 /* ─── Responsive ─── */
 
-/* Tablet: 768px – 1024px */
 @media (max-width: 1024px) {
   .test-pane {
     padding: 28px 24px;
@@ -420,14 +496,13 @@
     padding-right: 32px;
   }
   .test-header .section-name {
-    font-size: 16px;
+    font-size: 15px;
   }
   .option-text {
     font-size: 15px;
   }
 }
 
-/* Mobile: ≤ 767px — stack panes, show only question panel */
 @media (max-width: 767px) {
   .test-main {
     flex-direction: column;
@@ -458,7 +533,7 @@
     min-height: unset;
   }
   .test-header .section-name {
-    font-size: 14px;
+    font-size: 13px;
   }
   .test-header .timer-value {
     font-size: 18px;
@@ -483,9 +558,13 @@
     font-size: 12px;
     padding: 5px 12px;
   }
+  .crossout-circle {
+    width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
 }
 
-/* Small mobile: ≤ 480px */
 @media (max-width: 480px) {
   .test-left-pane {
     flex: 0 0 30%;
@@ -515,7 +594,7 @@
   margin: 0 auto;
 }
 
-/* ─── Break screen responsive ─── */
+/* ─── Break screen ─── */
 .break-screen {
   position: fixed;
   inset: 0;
@@ -529,7 +608,7 @@
 .break-main {
   flex: 1;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   padding: 60px 80px;
   gap: 80px;
   overflow-y: auto;
@@ -541,29 +620,28 @@
   align-items: center;
   gap: 20px;
   flex-shrink: 0;
-  padding-top: 60px;
 }
 
 .break-timer-box {
-  border: 1.5px solid #555;
-  border-radius: 4px;
-  padding: 24px 36px;
+  border: 1.5px solid #fff;
+  border-radius: 6px;
+  padding: 28px 44px;
   text-align: center;
-  min-width: 200px;
+  min-width: 220px;
 }
 
 .break-instructions {
   flex: 1;
-  max-width: 480px;
+  max-width: 520px;
 }
 
 .break-resume-btn {
-  background: #f5c518;
+  background: #facc15;
   color: #111;
   border: none;
   border-radius: 9999px;
-  padding: 10px 28px;
-  font-size: 14px;
+  padding: 11px 32px;
+  font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   font-family: inherit;
@@ -572,8 +650,9 @@
 .break-footer {
   padding: 14px 24px;
   border-top: 1px solid #333;
-  font-size: 13px;
-  color: #aaa;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
 }
 
 @media (max-width: 767px) {
@@ -584,7 +663,6 @@
     align-items: center;
   }
   .break-timer-block {
-    padding-top: 0;
     width: 100%;
   }
   .break-timer-box {

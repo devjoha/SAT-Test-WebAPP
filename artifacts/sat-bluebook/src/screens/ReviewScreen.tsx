@@ -138,7 +138,7 @@ export default function ReviewScreen({
       >
         {/* Username left */}
         <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
-          abbvsss Abdusattorov
+          Shadow Qasimbayev
         </span>
 
         {/* Back + Next right */}

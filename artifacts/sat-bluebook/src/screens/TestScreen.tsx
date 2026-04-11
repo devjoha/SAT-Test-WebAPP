@@ -8,7 +8,6 @@ function formatTime(seconds: number): string {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-/* ── minimal inline icons ── */
 const ChevronUp = () => (
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="6 15 12 9 18 15" />
@@ -20,7 +19,7 @@ const ChevronDown = () => (
   </svg>
 );
 const BookmarkIcon = ({ filled }: { filled: boolean }) => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill={filled ? "#c0392b" : "none"} stroke={filled ? "#c0392b" : "#6b7280"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill={filled ? "#c0392b" : "none"} stroke={filled ? "#c0392b" : "#555"} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
   </svg>
 );
@@ -101,7 +100,6 @@ export default function TestScreen({
 
       {/* ── HEADER ── */}
       <header className="test-header">
-        {/* Left: section name + directions */}
         <div>
           <div className="section-name">{module.name}</div>
           <button className="directions-btn" onClick={() => setShowDirections(v => !v)}>
@@ -109,9 +107,11 @@ export default function TestScreen({
           </button>
         </div>
 
-        {/* Center: timer + hide */}
         <div className="timer-block">
-          <span className={`timer-value${isLowTime ? " low-time" : ""}`} style={{ visibility: timerHidden ? "hidden" : "visible" }}>
+          <span
+            className={`timer-value${isLowTime ? " low-time" : ""}`}
+            style={{ visibility: timerHidden ? "hidden" : "visible" }}
+          >
             {formatTime(timeRemaining)}
           </span>
           <div style={{ display: "flex", justifyContent: "center" }}>
@@ -121,28 +121,27 @@ export default function TestScreen({
           </div>
         </div>
 
-        {/* Right: tools */}
         <div className="header-right">
           {isMath ? (
             <>
-              <button className="tool-item" onClick={() => setShowCalculator(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: "#555" }}>
+              <button className="tool-item" onClick={() => setShowCalculator(v => !v)}>
                 <CalcIcon />
                 <span>Calculator</span>
               </button>
-              <button className="tool-item" onClick={() => setShowReference(v => !v)} style={{ background: "none", border: "none", cursor: "pointer", color: "#555" }}>
+              <button className="tool-item" onClick={() => setShowReference(v => !v)}>
                 <span style={{ fontSize: 16, fontWeight: 700, lineHeight: 1 }}>x²</span>
                 <span>Reference</span>
               </button>
-              <button className="tool-item" style={{ background: "none", border: "none", cursor: "pointer", color: "#555" }}>
+              <button className="tool-item">
                 <MoreIcon /><span>More</span>
               </button>
             </>
           ) : (
             <>
-              <button className="tool-item" style={{ background: "none", border: "none", cursor: "pointer", color: "#555" }}>
+              <button className="tool-item">
                 <HighlightIcon /><span>Highlights &amp; Notes</span>
               </button>
-              <button className="tool-item" style={{ background: "none", border: "none", cursor: "pointer", color: "#555" }}>
+              <button className="tool-item">
                 <MoreIcon /><span>More</span>
               </button>
             </>
@@ -150,9 +149,12 @@ export default function TestScreen({
         </div>
       </header>
 
+      {/* ── PRACTICE TEST BANNER ── */}
+      <div className="practice-test-banner">THIS IS A PRACTICE TEST</div>
+
       {/* ── DIRECTIONS DROPDOWN ── */}
       {showDirections && (
-        <div style={{ position: "absolute", top: 72, left: 0, right: 0, zIndex: 60, display: "flex", justifyContent: "center", padding: "0 20px" }}>
+        <div style={{ position: "absolute", top: 80, left: 0, right: 0, zIndex: 60, display: "flex", justifyContent: "center", padding: "0 20px" }}>
           <div style={{ background: "#fff", border: "2px solid #f5a623", borderRadius: 4, padding: "22px 28px 18px", maxWidth: 700, width: "100%", boxShadow: "0 6px 24px rgba(0,0,0,0.13)" }}>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "#111", marginBottom: 12 }}>
               The questions in this section address a number of important reading and writing skills. Each question includes one or more passages, which may include a table or graph. Read each passage and question carefully, and then choose the best answer.
@@ -172,21 +174,18 @@ export default function TestScreen({
       {/* ── MAIN ── */}
       <main className="test-main">
 
-        {/* Left passage pane */}
         {hasPassage && (
           <div className="test-pane test-left-pane">
             <p>{question.passage}</p>
           </div>
         )}
 
-        {/* Divider handle (only when two panes) */}
         {hasPassage && (
           <div className="divider-handle">
             <span /><span />
           </div>
         )}
 
-        {/* Right pane: question + answers */}
         <div className={`test-pane test-right-pane${hasPassage ? "" : " full-width"}`}>
 
           {/* Question header row */}
@@ -198,8 +197,10 @@ export default function TestScreen({
                 Mark for Review
               </button>
             </div>
-            <span className="abc-label">ABC</span>
+            <button className="abc-btn">APX</button>
           </div>
+
+          <hr className="question-header-separator" />
 
           {/* Question text */}
           <p className="question-text">{question.text}</p>
@@ -215,20 +216,30 @@ export default function TestScreen({
               else if (isSelected) cls += " selected";
 
               return (
-                <div
-                  key={choice.letter}
-                  className={cls}
-                  onClick={() => { if (!isCrossed) onSelectAnswer(choice.letter); }}
-                  onContextMenu={(e) => { e.preventDefault(); onToggleCrossOut(choice.letter); }}
-                >
-                  <div className="option-letter">{choice.letter}</div>
-                  <div className="option-text">{choice.text}</div>
-                  {isCrossed && (
+                <div key={choice.letter} className="option-row">
+                  <div
+                    className={cls}
+                    onClick={() => { if (!isCrossed) onSelectAnswer(choice.letter); }}
+                    onContextMenu={(e) => { e.preventDefault(); onToggleCrossOut(choice.letter); }}
+                  >
+                    <div className="option-letter">{choice.letter}</div>
+                    <div className="option-text">{choice.text}</div>
+                  </div>
+
+                  {isCrossed ? (
                     <button
                       className="undo-btn"
-                      onClick={(e) => { e.stopPropagation(); onToggleCrossOut(choice.letter); }}
+                      onClick={() => onToggleCrossOut(choice.letter)}
                     >
                       Undo
+                    </button>
+                  ) : (
+                    <button
+                      className="crossout-circle"
+                      onClick={() => onToggleCrossOut(choice.letter)}
+                      title={`Eliminate choice ${choice.letter}`}
+                    >
+                      {choice.letter}
                     </button>
                   )}
                 </div>
@@ -240,7 +251,7 @@ export default function TestScreen({
 
       {/* ── FOOTER ── */}
       <footer className="test-footer">
-        <span className="user-name">abbvsss Abdusattorov</span>
+        <span className="user-name">Shadow Qasimbayev</span>
 
         <button className="question-nav-pill" onClick={() => setShowPalette(true)}>
           Question {currentQuestion} of {totalQuestions} <ChevronUp />
@@ -275,7 +286,7 @@ export default function TestScreen({
 
       {/* ── CALCULATOR OVERLAY ── */}
       {showCalculator && (
-        <div style={{ position: "absolute", top: 80, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 340, overflow: "hidden" }}>
+        <div style={{ position: "absolute", top: 88, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 340, overflow: "hidden" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "8px 14px", background: "#1a1f71" }}>
             <div style={{ display: "flex", gap: 2 }}>
               <button style={{ background: "rgba(255,255,255,0.2)", border: "none", color: "#fff", padding: "4px 14px", borderRadius: 4, cursor: "pointer", fontSize: 12, fontWeight: 700 }}>Graphing</button>
@@ -291,7 +302,7 @@ export default function TestScreen({
 
       {/* ── REFERENCE OVERLAY ── */}
       {showReference && (
-        <div style={{ position: "absolute", top: 80, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 380, maxHeight: "72vh", overflowY: "auto" }}>
+        <div style={{ position: "absolute", top: 88, right: 20, zIndex: 60, background: "#fff", border: "1px solid #d1d5db", borderRadius: 10, boxShadow: "0 6px 24px rgba(0,0,0,0.15)", width: 380, maxHeight: "72vh", overflowY: "auto" }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 16px", background: "#111827", color: "#fff", position: "sticky", top: 0 }}>
             <span style={{ fontSize: 14, fontWeight: 700 }}>Reference Sheet</span>
             <button onClick={() => setShowReference(false)} style={{ background: "none", border: "none", color: "#fff", cursor: "pointer", fontSize: 20, lineHeight: 1 }}>×</button>
