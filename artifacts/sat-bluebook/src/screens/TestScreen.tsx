@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { Module } from "../data/questions";
 import QuestionPaletteModal from "../components/QuestionPaletteModal";
+import { APP_CONFIG } from "../config";
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -172,7 +173,7 @@ export default function TestScreen({
       )}
 
       {/* ── MAIN ── */}
-      <main className="test-main">
+      <main className={hasPassage ? "test-main" : "test-main test-main-math"}>
 
         {hasPassage && (
           <div className="test-pane test-left-pane">
@@ -186,7 +187,7 @@ export default function TestScreen({
           </div>
         )}
 
-        <div className={`test-pane test-right-pane${hasPassage ? "" : " full-width"}`}>
+        <div className={hasPassage ? "test-pane test-right-pane" : "test-pane test-math-pane"}>
 
           {/* Question header row */}
           <div className="question-header">
@@ -251,7 +252,7 @@ export default function TestScreen({
 
       {/* ── FOOTER ── */}
       <footer className="test-footer">
-        <span className="user-name">Shadow Qasimbayev</span>
+        <span className="user-name">{APP_CONFIG.studentName}</span>
 
         <button className="question-nav-pill" onClick={() => setShowPalette(true)}>
           Question {currentQuestion} of {totalQuestions} <ChevronUp />

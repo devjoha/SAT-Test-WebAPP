@@ -1,3 +1,5 @@
+import { APP_CONFIG } from "../config";
+
 interface ReviewScreenProps {
   moduleName: string;
   totalQuestions: number;
@@ -138,7 +140,7 @@ export default function ReviewScreen({
       >
         {/* Username left */}
         <span style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
-          Shadow Qasimbayev
+          {APP_CONFIG.studentName}
         </span>
 
         {/* Back + Next right */}

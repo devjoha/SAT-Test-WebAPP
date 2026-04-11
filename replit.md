@@ -22,6 +22,13 @@ pnpm workspace monorepo using TypeScript. Contains an API server and the SAT Blu
 - `pnpm --filter @workspace/sat-bluebook run dev` — run SAT Bluebook app locally
 - `pnpm --filter @workspace/api-server run dev` — run API server locally
 
+## Easy Customization (`artifacts/sat-bluebook/src/config.ts`)
+
+Edit `config.ts` to change:
+- `studentName` — student name shown in all screen footers
+- `breakDurationMinutes` — duration of the break between R&W and Math
+- `colors` — all app colors in one place (navbar, buttons, etc.)
+
 ## SAT Bluebook App (`artifacts/sat-bluebook`)
 
 A pixel-perfect replica of the College Board's Bluebook digital SAT interface.

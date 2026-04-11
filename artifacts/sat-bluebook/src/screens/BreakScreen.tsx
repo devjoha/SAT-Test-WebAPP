@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { APP_CONFIG } from "../config";
 
 interface BreakScreenProps {
   breakDurationMinutes?: number;
@@ -11,7 +12,7 @@ function formatTime(secs: number) {
   return `${m}:${String(s).padStart(2, "0")}`;
 }
 
-export default function BreakScreen({ breakDurationMinutes = 10, onContinue }: BreakScreenProps) {
+export default function BreakScreen({ breakDurationMinutes = APP_CONFIG.breakDurationMinutes, onContinue }: BreakScreenProps) {
   const [remaining, setRemaining] = useState(breakDurationMinutes * 60);
   const onContinueRef = useRef(onContinue);
   onContinueRef.current = onContinue;
@@ -82,7 +83,7 @@ export default function BreakScreen({ breakDurationMinutes = 10, onContinue }: B
         </div>
       </div>
 
-      <div className="break-footer">Shadow Qasimbayev</div>
+      <div className="break-footer">{APP_CONFIG.studentName}</div>
     </div>
   );
 }

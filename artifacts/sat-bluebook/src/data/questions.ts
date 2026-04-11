@@ -1,3 +1,13 @@
+// ─────────────────────────────────────────────────────────────
+// QUESTION DATA
+// Each question must have:
+//   id       — question number within the module
+//   passage  — the text shown in the LEFT panel (required for R&W)
+//   text     — the question prompt shown in the RIGHT panel
+//   choices  — answer options A–D
+//   answer   — correct letter (for reference)
+// ─────────────────────────────────────────────────────────────
+
 export interface Question {
   id: number;
   passage?: string;
@@ -74,7 +84,9 @@ export const modules: Module[] = [
       },
       {
         id: 5,
-        text: "The researcher noted that migratory birds navigate using Earth's magnetic field. This finding ______ earlier studies that suggested birds relied solely on visual landmarks.",
+        passage:
+          "The researcher noted that migratory birds navigate using Earth's magnetic field. This finding ______ earlier studies that suggested birds relied solely on visual landmarks.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "contradicts" },
           { letter: "B", text: "corroborates" },
@@ -98,7 +110,9 @@ export const modules: Module[] = [
       },
       {
         id: 7,
-        text: "Many economists argue that automation will displace workers in manufacturing industries; ______, others contend that new technologies will create more jobs than they eliminate.",
+        passage:
+          "Many economists argue that automation will displace workers in manufacturing industries; ______, others contend that new technologies will create more jobs than they eliminate.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "therefore" },
           { letter: "B", text: "furthermore" },
@@ -122,7 +136,9 @@ export const modules: Module[] = [
       },
       {
         id: 9,
-        text: "The committee's decision to postpone the event ______ criticized by participants who had already made travel arrangements.",
+        passage:
+          "The committee's decision to postpone the event ______ criticized by participants who had already made travel arrangements.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "was" },
           { letter: "B", text: "were" },
@@ -146,7 +162,9 @@ export const modules: Module[] = [
       },
       {
         id: 11,
-        text: "Despite widespread concern about declining bee populations, some ______ still question whether colony collapse disorder poses a significant threat to agriculture.",
+        passage:
+          "Despite widespread concern about declining bee populations, some ______ still question whether colony collapse disorder poses a significant threat to agriculture.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "researchers" },
           { letter: "B", text: "research" },
@@ -170,7 +188,9 @@ export const modules: Module[] = [
       },
       {
         id: 13,
-        text: "The engineering team's prototype, along with several backup units, ______ submitted to the review board last Tuesday.",
+        passage:
+          "The engineering team's prototype, along with several backup units, ______ submitted to the review board last Tuesday.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "was" },
           { letter: "B", text: "were" },
@@ -194,7 +214,9 @@ export const modules: Module[] = [
       },
       {
         id: 15,
-        text: "The new policy aims to reduce carbon emissions by encouraging the adoption of electric vehicles and investing in renewable energy infrastructure. Analysts predict that these measures will ______ the country's environmental goals.",
+        passage:
+          "The new policy aims to reduce carbon emissions by encouraging the adoption of electric vehicles and investing in renewable energy infrastructure. Analysts predict that these measures will ______ the country's environmental goals.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "accelerate progress toward" },
           { letter: "B", text: "provide obstacles to" },
@@ -218,7 +240,9 @@ export const modules: Module[] = [
       },
       {
         id: 17,
-        text: "The journalist's investigation revealed that the company had been ______ safety protocols for years, putting workers at risk.",
+        passage:
+          "The journalist's investigation revealed that the company had been ______ safety protocols for years, putting workers at risk.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "instituting" },
           { letter: "B", text: "circumventing" },
@@ -255,7 +279,9 @@ export const modules: Module[] = [
       },
       {
         id: 20,
-        text: "The city council approved the new transit plan; ______, construction on the first subway line is expected to begin within six months.",
+        passage:
+          "The city council approved the new transit plan; ______, construction on the first subway line is expected to begin within six months.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "nonetheless" },
           { letter: "B", text: "conversely" },
@@ -279,7 +305,9 @@ export const modules: Module[] = [
       },
       {
         id: 22,
-        text: "During the 18th century, clockmakers developed increasingly precise instruments. ______ these advances, navigators were able to determine longitude at sea with much greater accuracy.",
+        passage:
+          "During the 18th century, clockmakers developed increasingly precise instruments. ______ these advances, navigators were able to determine longitude at sea with much greater accuracy.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "Despite" },
           { letter: "B", text: "Because of" },
@@ -303,7 +331,9 @@ export const modules: Module[] = [
       },
       {
         id: 24,
-        text: "Scientists believe that the deep ocean, once thought to be ______, is in fact teeming with diverse life forms that have evolved unique adaptations to survive extreme pressure, cold, and darkness.",
+        passage:
+          "Scientists believe that the deep ocean, once thought to be ______, is in fact teeming with diverse life forms that have evolved unique adaptations to survive extreme pressure, cold, and darkness.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "inhospitable" },
           { letter: "B", text: "expansive" },
@@ -327,7 +357,9 @@ export const modules: Module[] = [
       },
       {
         id: 26,
-        text: "The report found that employees who work from home report higher levels of job satisfaction; ______, the same employees show lower rates of promotion compared to their in-office counterparts.",
+        passage:
+          "The report found that employees who work from home report higher levels of job satisfaction; ______, the same employees show lower rates of promotion compared to their in-office counterparts.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "similarly" },
           { letter: "B", text: "therefore" },
@@ -374,7 +406,9 @@ export const modules: Module[] = [
       },
       {
         id: 2,
-        text: "The astronomer's recent findings ______ the long-held assumption that the outer solar system contains only gas giants and icy bodies.",
+        passage:
+          "The astronomer's recent findings ______ the long-held assumption that the outer solar system contains only gas giants and icy bodies.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "reinforce" },
           { letter: "B", text: "complicate" },
@@ -398,7 +432,9 @@ export const modules: Module[] = [
       },
       {
         id: 4,
-        text: "The committee voted unanimously to accept the proposal; each member ______ signed the final agreement before the meeting adjourned.",
+        passage:
+          "The committee voted unanimously to accept the proposal; each member ______ signed the final agreement before the meeting adjourned.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "has" },
           { letter: "B", text: "have" },
@@ -422,7 +458,9 @@ export const modules: Module[] = [
       },
       {
         id: 6,
-        text: "The archaeologist's conclusion—that the site was abandoned due to a prolonged drought—______ recent geological evidence suggesting a sudden volcanic event.",
+        passage:
+          "The archaeologist's conclusion—that the site was abandoned due to a prolonged drought—______ recent geological evidence suggesting a sudden volcanic event.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "aligns with" },
           { letter: "B", text: "is contradicted by" },
@@ -446,7 +484,9 @@ export const modules: Module[] = [
       },
       {
         id: 8,
-        text: "The novelist's latest work, like her earlier books, ______ a dark, atmospheric tone that keeps readers in a state of unease throughout.",
+        passage:
+          "The novelist's latest work, like her earlier books, ______ a dark, atmospheric tone that keeps readers in a state of unease throughout.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "maintain" },
           { letter: "B", text: "maintains" },
@@ -470,7 +510,9 @@ export const modules: Module[] = [
       },
       {
         id: 10,
-        text: "The senator's remarks, though intended to ______ tension between the two parties, instead provoked a heated exchange on the floor of the chamber.",
+        passage:
+          "The senator's remarks, though intended to ______ tension between the two parties, instead provoked a heated exchange on the floor of the chamber.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "inflame" },
           { letter: "B", text: "escalate" },
@@ -494,7 +536,9 @@ export const modules: Module[] = [
       },
       {
         id: 12,
-        text: "The new tax policy is projected to generate $4 billion in annual revenue. ______, the projected figure does not account for potential behavioral changes by taxpayers that could reduce revenue.",
+        passage:
+          "The new tax policy is projected to generate $4 billion in annual revenue. ______, the projected figure does not account for potential behavioral changes by taxpayers that could reduce revenue.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "Furthermore" },
           { letter: "B", text: "Similarly" },
@@ -518,7 +562,9 @@ export const modules: Module[] = [
       },
       {
         id: 14,
-        text: "After years of negotiations, the treaty was ______ ratified by all twelve member nations, bringing a long era of regional conflict to an end.",
+        passage:
+          "After years of negotiations, the treaty was ______ ratified by all twelve member nations, bringing a long era of regional conflict to an end.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "tentatively" },
           { letter: "B", text: "unanimously" },
@@ -542,7 +588,9 @@ export const modules: Module[] = [
       },
       {
         id: 16,
-        text: "The board of directors, despite pressure from shareholders, ______ to delay the merger until a thorough audit could be completed.",
+        passage:
+          "The board of directors, despite pressure from shareholders, ______ to delay the merger until a thorough audit could be completed.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "choose" },
           { letter: "B", text: "choosing" },
@@ -566,7 +614,9 @@ export const modules: Module[] = [
       },
       {
         id: 18,
-        text: "Conservationists argue that the proposed dam will ______ the natural migration patterns of several species of salmon that depend on the river to reach their spawning grounds.",
+        passage:
+          "Conservationists argue that the proposed dam will ______ the natural migration patterns of several species of salmon that depend on the river to reach their spawning grounds.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "facilitate" },
           { letter: "B", text: "disrupt" },
@@ -590,7 +640,9 @@ export const modules: Module[] = [
       },
       {
         id: 20,
-        text: "The laboratory's results, which were replicated in three separate studies, ______ compelling evidence that the new compound effectively inhibits tumor growth.",
+        passage:
+          "The laboratory's results, which were replicated in three separate studies, ______ compelling evidence that the new compound effectively inhibits tumor growth.",
+        text: "Which choice completes the text so that it conforms to the conventions of Standard English?",
         choices: [
           { letter: "A", text: "provide" },
           { letter: "B", text: "provides" },
@@ -614,7 +666,9 @@ export const modules: Module[] = [
       },
       {
         id: 22,
-        text: "The novel's narrator, an unreliable witness to the events he describes, often contradicts himself—______, several key plot details that he presents as facts are later revealed to be fabrications.",
+        passage:
+          "The novel's narrator, an unreliable witness to the events he describes, often contradicts himself—______, several key plot details that he presents as facts are later revealed to be fabrications.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "for instance" },
           { letter: "B", text: "on the other hand" },
@@ -638,7 +692,9 @@ export const modules: Module[] = [
       },
       {
         id: 24,
-        text: "The policy, if enacted, would require all new residential buildings to meet strict energy efficiency standards—______ from the voluntary guidelines currently in place.",
+        passage:
+          "The policy, if enacted, would require all new residential buildings to meet strict energy efficiency standards—______ from the voluntary guidelines currently in place.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "a modest divergence" },
           { letter: "B", text: "a significant departure" },
@@ -662,7 +718,9 @@ export const modules: Module[] = [
       },
       {
         id: 26,
-        text: "Climate scientists have documented a troubling trend: as global temperatures rise, the permafrost in Arctic regions is beginning to thaw, releasing large quantities of methane—a greenhouse gas far more ______ than carbon dioxide—into the atmosphere.",
+        passage:
+          "Climate scientists have documented a troubling trend: as global temperatures rise, the permafrost in Arctic regions is beginning to thaw, releasing large quantities of methane—a greenhouse gas far more ______ than carbon dioxide—into the atmosphere.",
+        text: "Which choice completes the text with the most logical and precise word or phrase?",
         choices: [
           { letter: "A", text: "prevalent" },
           { letter: "B", text: "visible" },
@@ -762,179 +820,179 @@ export const modules: Module[] = [
       },
       {
         id: 7,
-        text: "A car travels at a constant speed of 60 miles per hour. How many miles does it travel in 2.5 hours?",
+        text: "A car travels at a constant speed of 60 miles per hour. How far will it travel in 2 hours and 30 minutes?",
         choices: [
-          { letter: "A", text: "120" },
-          { letter: "B", text: "130" },
-          { letter: "C", text: "150" },
-          { letter: "D", text: "180" },
+          { letter: "A", text: "120 miles" },
+          { letter: "B", text: "140 miles" },
+          { letter: "C", text: "150 miles" },
+          { letter: "D", text: "160 miles" },
         ],
         answer: "C",
       },
       {
         id: 8,
-        text: "What is the solution to the inequality 2x − 5 > 11?",
+        text: "If the mean of the numbers 4, 7, 10, x, and 14 is 9, what is the value of x?",
         choices: [
-          { letter: "A", text: "x > 3" },
-          { letter: "B", text: "x > 6" },
-          { letter: "C", text: "x > 8" },
-          { letter: "D", text: "x > 10" },
+          { letter: "A", text: "8" },
+          { letter: "B", text: "9" },
+          { letter: "C", text: "10" },
+          { letter: "D", text: "11" },
         ],
         answer: "C",
       },
       {
         id: 9,
-        text: "The ratio of boys to girls in a class is 3:4. If there are 21 boys, how many girls are there?",
+        text: "Which of the following is a solution to the equation x² − 5x + 6 = 0?",
         choices: [
-          { letter: "A", text: "24" },
-          { letter: "B", text: "26" },
-          { letter: "C", text: "28" },
-          { letter: "D", text: "32" },
+          { letter: "A", text: "x = 1" },
+          { letter: "B", text: "x = 2" },
+          { letter: "C", text: "x = 4" },
+          { letter: "D", text: "x = 6" },
         ],
-        answer: "C",
+        answer: "B",
       },
       {
         id: 10,
-        text: "Which equation represents a line perpendicular to y = 2x − 3?",
+        text: "A triangle has sides of length 5, 12, and 13. What is the area of the triangle?",
         choices: [
-          { letter: "A", text: "y = 2x + 1" },
-          { letter: "B", text: "y = −2x + 5" },
-          { letter: "C", text: "y = −(1/2)x + 4" },
-          { letter: "D", text: "y = (1/2)x − 1" },
+          { letter: "A", text: "20" },
+          { letter: "B", text: "25" },
+          { letter: "C", text: "30" },
+          { letter: "D", text: "36" },
         ],
         answer: "C",
       },
       {
         id: 11,
-        text: "A circle has a radius of 5. What is its circumference? (Use π ≈ 3.14)",
+        text: "If 2^x = 32, what is the value of x?",
         choices: [
-          { letter: "A", text: "15.70" },
-          { letter: "B", text: "31.40" },
-          { letter: "C", text: "78.50" },
-          { letter: "D", text: "157.00" },
-        ],
-        answer: "B",
-      },
-      {
-        id: 12,
-        text: "If 20% of a number is 14, what is the number?",
-        choices: [
-          { letter: "A", text: "60" },
-          { letter: "B", text: "65" },
-          { letter: "C", text: "70" },
-          { letter: "D", text: "75" },
+          { letter: "A", text: "3" },
+          { letter: "B", text: "4" },
+          { letter: "C", text: "5" },
+          { letter: "D", text: "6" },
         ],
         answer: "C",
       },
       {
-        id: 13,
-        text: "Which of the following is a factor of x² − 9?",
+        id: 12,
+        text: "A line in the xy-plane passes through the origin and has a slope of 3. Which of the following points lies on this line?",
         choices: [
-          { letter: "A", text: "x − 3" },
-          { letter: "B", text: "x + 9" },
-          { letter: "C", text: "x − 9" },
-          { letter: "D", text: "x² + 3" },
+          { letter: "A", text: "(1, 2)" },
+          { letter: "B", text: "(2, 6)" },
+          { letter: "C", text: "(3, 6)" },
+          { letter: "D", text: "(4, 9)" },
         ],
-        answer: "A",
+        answer: "B",
+      },
+      {
+        id: 13,
+        text: "In a class of 30 students, 18 play soccer and 12 play basketball. If 6 students play both sports, how many students play neither sport?",
+        choices: [
+          { letter: "A", text: "4" },
+          { letter: "B", text: "6" },
+          { letter: "C", text: "8" },
+          { letter: "D", text: "10" },
+        ],
+        answer: "B",
       },
       {
         id: 14,
-        text: "A data set has the values: 4, 7, 7, 8, 9, 10, 12. What is the median?",
+        text: "What is the value of |−7 + 3|?",
+        choices: [
+          { letter: "A", text: "−4" },
+          { letter: "B", text: "4" },
+          { letter: "C", text: "10" },
+          { letter: "D", text: "−10" },
+        ],
+        answer: "B",
+      },
+      {
+        id: 15,
+        text: "A circle has a radius of 6. What is the circumference of the circle?",
+        choices: [
+          { letter: "A", text: "6π" },
+          { letter: "B", text: "12π" },
+          { letter: "C", text: "18π" },
+          { letter: "D", text: "36π" },
+        ],
+        answer: "B",
+      },
+      {
+        id: 16,
+        text: "If 5(x − 2) = 3x + 8, what is the value of x?",
         choices: [
           { letter: "A", text: "7" },
           { letter: "B", text: "8" },
           { letter: "C", text: "9" },
           { letter: "D", text: "10" },
         ],
-        answer: "B",
-      },
-      {
-        id: 15,
-        text: "In a right triangle, the two legs measure 6 and 8. What is the length of the hypotenuse?",
-        choices: [
-          { letter: "A", text: "9" },
-          { letter: "B", text: "10" },
-          { letter: "C", text: "12" },
-          { letter: "D", text: "14" },
-        ],
-        answer: "B",
-      },
-      {
-        id: 16,
-        text: "Which of the following is equivalent to 3(2x − 4) − 2(x + 1)?",
-        choices: [
-          { letter: "A", text: "4x − 14" },
-          { letter: "B", text: "4x + 14" },
-          { letter: "C", text: "8x − 14" },
-          { letter: "D", text: "8x + 14" },
-        ],
-        answer: "A",
+        answer: "C",
       },
       {
         id: 17,
-        text: "A bag contains 5 red marbles, 3 blue marbles, and 2 green marbles. What is the probability of randomly selecting a blue marble?",
+        text: "The function g is defined by g(x) = 2x² + 3x − 5. What is the value of g(−2)?",
         choices: [
-          { letter: "A", text: "3/10" },
-          { letter: "B", text: "3/7" },
-          { letter: "C", text: "1/3" },
-          { letter: "D", text: "2/5" },
+          { letter: "A", text: "−7" },
+          { letter: "B", text: "−3" },
+          { letter: "C", text: "1" },
+          { letter: "D", text: "3" },
         ],
-        answer: "A",
+        answer: "B",
       },
       {
         id: 18,
-        text: "The population of a town was 12,500 in 2010 and 15,000 in 2020. What was the percent increase in population?",
+        text: "A bag contains 4 red marbles, 5 blue marbles, and 3 green marbles. If one marble is drawn at random, what is the probability it is blue?",
         choices: [
-          { letter: "A", text: "16%" },
-          { letter: "B", text: "20%" },
-          { letter: "C", text: "25%" },
-          { letter: "D", text: "30%" },
+          { letter: "A", text: "1/4" },
+          { letter: "B", text: "5/12" },
+          { letter: "C", text: "1/3" },
+          { letter: "D", text: "5/9" },
         ],
         answer: "B",
       },
       {
         id: 19,
-        text: "What are the solutions to x² − 5x + 6 = 0?",
+        text: "What is the slope of the line 3x − 4y = 12?",
         choices: [
-          { letter: "A", text: "x = 1 and x = 6" },
-          { letter: "B", text: "x = 2 and x = 3" },
-          { letter: "C", text: "x = −2 and x = −3" },
-          { letter: "D", text: "x = −1 and x = 6" },
+          { letter: "A", text: "−3/4" },
+          { letter: "B", text: "3/4" },
+          { letter: "C", text: "4/3" },
+          { letter: "D", text: "−4/3" },
         ],
         answer: "B",
       },
       {
         id: 20,
-        text: "An angle measures 72°. What is its supplement?",
+        text: "If x² = 81, which of the following gives all possible values of x?",
         choices: [
-          { letter: "A", text: "18°" },
-          { letter: "B", text: "108°" },
-          { letter: "C", text: "118°" },
-          { letter: "D", text: "288°" },
+          { letter: "A", text: "9 only" },
+          { letter: "B", text: "−9 only" },
+          { letter: "C", text: "9 and −9" },
+          { letter: "D", text: "81 and −81" },
         ],
-        answer: "B",
+        answer: "C",
       },
       {
         id: 21,
-        text: "If g(x) = 3x + 5 and h(x) = x − 2, what is g(h(4))?",
+        text: "A cylinder has a radius of 3 and a height of 8. What is the volume of the cylinder?",
         choices: [
-          { letter: "A", text: "9" },
-          { letter: "B", text: "11" },
-          { letter: "C", text: "13" },
-          { letter: "D", text: "17" },
+          { letter: "A", text: "24π" },
+          { letter: "B", text: "48π" },
+          { letter: "C", text: "72π" },
+          { letter: "D", text: "96π" },
         ],
-        answer: "B",
+        answer: "C",
       },
       {
         id: 22,
-        text: "The vertices of a triangle are at (0, 0), (4, 0), and (0, 3). What is the area of the triangle?",
+        text: "If the ratio of boys to girls in a class is 3:4 and there are 28 students total, how many boys are in the class?",
         choices: [
-          { letter: "A", text: "6" },
-          { letter: "B", text: "7" },
-          { letter: "C", text: "12" },
-          { letter: "D", text: "14" },
+          { letter: "A", text: "9" },
+          { letter: "B", text: "12" },
+          { letter: "C", text: "16" },
+          { letter: "D", text: "21" },
         ],
-        answer: "A",
+        answer: "B",
       },
     ],
   },
@@ -948,94 +1006,116 @@ export const modules: Module[] = [
     questions: [
       {
         id: 1,
-        text: "The expression 4x² − 36 can be written as which of the following?",
+        text: "Which of the following is equivalent to (x + 4)²?",
         choices: [
-          { letter: "A", text: "4(x − 3)(x + 3)" },
-          { letter: "B", text: "(2x − 6)(2x + 6)" },
-          { letter: "C", text: "4(x − 9)(x + 9)" },
-          { letter: "D", text: "(4x − 6)(x + 6)" },
-        ],
-        answer: "A",
-      },
-      {
-        id: 2,
-        text: "A line passes through the points (0, 4) and (3, −2). What is the equation of the line?",
-        choices: [
-          { letter: "A", text: "y = −2x + 4" },
-          { letter: "B", text: "y = 2x + 4" },
-          { letter: "C", text: "y = −(1/2)x + 4" },
-          { letter: "D", text: "y = (2/3)x − 4" },
-        ],
-        answer: "A",
-      },
-      {
-        id: 3,
-        text: "If sin θ = 3/5 and θ is in the first quadrant, what is cos θ?",
-        choices: [
-          { letter: "A", text: "3/4" },
-          { letter: "B", text: "4/5" },
-          { letter: "C", text: "5/4" },
-          { letter: "D", text: "5/3" },
+          { letter: "A", text: "x² + 8" },
+          { letter: "B", text: "x² + 8x + 16" },
+          { letter: "C", text: "x² + 16" },
+          { letter: "D", text: "x² + 4x + 16" },
         ],
         answer: "B",
       },
       {
-        id: 4,
-        text: "A function f is defined by f(x) = 2x² − 8x + 6. For what value of x does f reach its minimum?",
+        id: 2,
+        text: "A train travels 240 miles in 4 hours. At this rate, how many miles will the train travel in 7 hours?",
         choices: [
-          { letter: "A", text: "x = 1" },
-          { letter: "B", text: "x = 2" },
-          { letter: "C", text: "x = 3" },
-          { letter: "D", text: "x = 4" },
+          { letter: "A", text: "360" },
+          { letter: "B", text: "380" },
+          { letter: "C", text: "400" },
+          { letter: "D", text: "420" },
+        ],
+        answer: "D",
+      },
+      {
+        id: 3,
+        text: "For the function h(x) = 3x − 7, what value of x gives h(x) = 8?",
+        choices: [
+          { letter: "A", text: "3" },
+          { letter: "B", text: "4" },
+          { letter: "C", text: "5" },
+          { letter: "D", text: "6" },
+        ],
+        answer: "C",
+      },
+      {
+        id: 4,
+        text: "What is the solution to the system of equations?\n2x + y = 10\nx − y = 2",
+        choices: [
+          { letter: "A", text: "x = 3, y = 4" },
+          { letter: "B", text: "x = 4, y = 2" },
+          { letter: "C", text: "x = 5, y = 0" },
+          { letter: "D", text: "x = 2, y = 6" },
         ],
         answer: "B",
       },
       {
         id: 5,
-        text: "Which of the following systems of equations has no solution?\n\nI. y = 3x + 1 and y = 3x − 4\nII. y = 2x + 5 and y = −2x + 5",
+        text: "The graph of y = ax² + bx + c has a vertex at (2, −3). If the parabola opens upward, which of the following must be true?",
         choices: [
-          { letter: "A", text: "I only" },
-          { letter: "B", text: "II only" },
-          { letter: "C", text: "Both I and II" },
-          { letter: "D", text: "Neither I nor II" },
+          { letter: "A", text: "a < 0" },
+          { letter: "B", text: "a > 0" },
+          { letter: "C", text: "b = 0" },
+          { letter: "D", text: "c < 0" },
         ],
-        answer: "A",
+        answer: "B",
       },
       {
         id: 6,
-        text: "An exponential function is defined by f(x) = 3 · 2ˣ. What is f(4)?",
+        text: "A data set has a mean of 50 and a standard deviation of 5. Which value is exactly two standard deviations above the mean?",
         choices: [
-          { letter: "A", text: "24" },
-          { letter: "B", text: "36" },
-          { letter: "C", text: "48" },
-          { letter: "D", text: "96" },
+          { letter: "A", text: "55" },
+          { letter: "B", text: "57" },
+          { letter: "C", text: "60" },
+          { letter: "D", text: "65" },
         ],
         answer: "C",
       },
       {
         id: 7,
-        text: "Two similar triangles have corresponding sides in the ratio 3:5. If the area of the smaller triangle is 27 square units, what is the area of the larger triangle?",
+        text: "In the equation 4(x + 3) = 2(x + 9), what is the value of x?",
         choices: [
-          { letter: "A", text: "45" },
-          { letter: "B", text: "50" },
-          { letter: "C", text: "75" },
-          { letter: "D", text: "135" },
+          { letter: "A", text: "1" },
+          { letter: "B", text: "3" },
+          { letter: "C", text: "5" },
+          { letter: "D", text: "6" },
         ],
-        answer: "C",
+        answer: "B",
       },
       {
         id: 8,
-        text: "A scatterplot shows a set of data points. The line of best fit has equation y = 1.5x + 3. Based on this model, what is the predicted value of y when x = 10?",
+        text: "A right triangle has legs of length 8 and 15. What is the length of the hypotenuse?",
         choices: [
           { letter: "A", text: "13" },
-          { letter: "B", text: "15" },
-          { letter: "C", text: "18" },
-          { letter: "D", text: "21" },
+          { letter: "B", text: "16" },
+          { letter: "C", text: "17" },
+          { letter: "D", text: "23" },
         ],
         answer: "C",
       },
       {
         id: 9,
+        text: "If the expression (3x³y²)(4x²y) is simplified, which of the following is the result?",
+        choices: [
+          { letter: "A", text: "7x⁵y³" },
+          { letter: "B", text: "12x⁵y³" },
+          { letter: "C", text: "12x⁶y²" },
+          { letter: "D", text: "7x⁶y³" },
+        ],
+        answer: "B",
+      },
+      {
+        id: 10,
+        text: "A square has an area of 144 square units. What is the perimeter of the square?",
+        choices: [
+          { letter: "A", text: "36" },
+          { letter: "B", text: "44" },
+          { letter: "C", text: "48" },
+          { letter: "D", text: "52" },
+        ],
+        answer: "C",
+      },
+      {
+        id: 11,
         text: "If log₂(x) = 5, what is the value of x?",
         choices: [
           { letter: "A", text: "10" },
@@ -1046,147 +1126,125 @@ export const modules: Module[] = [
         answer: "D",
       },
       {
-        id: 10,
-        text: "A cylinder has a radius of 3 and a height of 8. What is its volume? (Use π ≈ 3.14)",
-        choices: [
-          { letter: "A", text: "150.72" },
-          { letter: "B", text: "226.08" },
-          { letter: "C", text: "301.44" },
-          { letter: "D", text: "452.16" },
-        ],
-        answer: "B",
-      },
-      {
-        id: 11,
-        text: "The graph of y = f(x) is shifted 3 units to the right and 2 units down. Which of the following represents the new function?",
-        choices: [
-          { letter: "A", text: "y = f(x + 3) + 2" },
-          { letter: "B", text: "y = f(x − 3) − 2" },
-          { letter: "C", text: "y = f(x + 3) − 2" },
-          { letter: "D", text: "y = f(x − 3) + 2" },
-        ],
-        answer: "B",
-      },
-      {
         id: 12,
-        text: "A data set of 8 values has a mean of 15. If one value of 9 is removed, what is the new mean?",
+        text: "A population grows at a rate of 4% per year. If the initial population is 5,000, what is the population after 2 years?",
         choices: [
-          { letter: "A", text: "15.5" },
-          { letter: "B", text: "16" },
-          { letter: "C", text: "16.5" },
-          { letter: "D", text: "17" },
+          { letter: "A", text: "5,200" },
+          { letter: "B", text: "5,400" },
+          { letter: "C", text: "5,408" },
+          { letter: "D", text: "5,432" },
         ],
-        answer: "B",
+        answer: "C",
       },
       {
         id: 13,
-        text: "Which value of x satisfies the equation |2x − 6| = 10?",
+        text: "In the xy-plane, the equation of a circle with center (3, −2) and radius 5 is:",
         choices: [
-          { letter: "A", text: "x = 8 only" },
-          { letter: "B", text: "x = −2 only" },
-          { letter: "C", text: "x = 8 or x = −2" },
-          { letter: "D", text: "x = 2 or x = −8" },
+          { letter: "A", text: "(x − 3)² + (y + 2)² = 5" },
+          { letter: "B", text: "(x + 3)² + (y − 2)² = 25" },
+          { letter: "C", text: "(x − 3)² + (y + 2)² = 25" },
+          { letter: "D", text: "(x − 3)² − (y + 2)² = 25" },
         ],
         answer: "C",
       },
       {
         id: 14,
-        text: "The function h(t) = −16t² + 64t + 5 models the height in feet of a ball t seconds after it is thrown. How many seconds does it take the ball to reach its maximum height?",
+        text: "What is the value of sin(30°)?",
         choices: [
-          { letter: "A", text: "1" },
-          { letter: "B", text: "2" },
-          { letter: "C", text: "3" },
-          { letter: "D", text: "4" },
+          { letter: "A", text: "√3/2" },
+          { letter: "B", text: "1/2" },
+          { letter: "C", text: "√2/2" },
+          { letter: "D", text: "1" },
         ],
         answer: "B",
       },
       {
         id: 15,
-        text: "A survey of 200 students found that 120 prefer science and 90 prefer math. If 40 students prefer both, how many prefer neither?",
+        text: "If x + y = 10 and xy = 21, what is the value of x² + y²?",
         choices: [
-          { letter: "A", text: "20" },
-          { letter: "B", text: "30" },
-          { letter: "C", text: "40" },
-          { letter: "D", text: "50" },
+          { letter: "A", text: "42" },
+          { letter: "B", text: "58" },
+          { letter: "C", text: "79" },
+          { letter: "D", text: "100" },
         ],
         answer: "B",
       },
       {
         id: 16,
-        text: "In the xy-plane, a circle has center (2, −3) and radius 5. Which of the following points lies on the circle?",
+        text: "A line has the equation y = −2x + 5. Which of the following lines is parallel to it?",
         choices: [
-          { letter: "A", text: "(7, −3)" },
-          { letter: "B", text: "(2, 5)" },
-          { letter: "C", text: "(−3, −3)" },
-          { letter: "D", text: "(2, −8)" },
+          { letter: "A", text: "y = 2x + 5" },
+          { letter: "B", text: "y = −2x − 3" },
+          { letter: "C", text: "y = (1/2)x + 5" },
+          { letter: "D", text: "y = −(1/2)x + 3" },
         ],
-        answer: "A",
+        answer: "B",
       },
       {
         id: 17,
-        text: "If (x + a)² = x² + 10x + 25, what is the value of a?",
+        text: "What is the sum of the roots of 2x² − 8x + 6 = 0?",
         choices: [
-          { letter: "A", text: "3" },
-          { letter: "B", text: "4" },
-          { letter: "C", text: "5" },
+          { letter: "A", text: "2" },
+          { letter: "B", text: "3" },
+          { letter: "C", text: "4" },
           { letter: "D", text: "6" },
         ],
         answer: "C",
       },
       {
         id: 18,
-        text: "A geometric sequence begins 4, 12, 36, ... What is the 6th term?",
+        text: "A committee of 3 people is to be chosen from a group of 7. In how many ways can this be done?",
         choices: [
-          { letter: "A", text: "324" },
-          { letter: "B", text: "972" },
-          { letter: "C", text: "2916" },
-          { letter: "D", text: "8748" },
+          { letter: "A", text: "21" },
+          { letter: "B", text: "35" },
+          { letter: "C", text: "42" },
+          { letter: "D", text: "210" },
         ],
         answer: "B",
       },
       {
         id: 19,
-        text: "In triangle ABC, angle A = 40° and angle B = 75°. What is the measure of angle C?",
+        text: "Which value of x satisfies |2x − 3| = 7?",
         choices: [
-          { letter: "A", text: "55°" },
-          { letter: "B", text: "65°" },
-          { letter: "C", text: "70°" },
-          { letter: "D", text: "75°" },
-        ],
-        answer: "B",
-      },
-      {
-        id: 20,
-        text: "Which of the following is equivalent to (3x³y²)²?",
-        choices: [
-          { letter: "A", text: "6x⁵y⁴" },
-          { letter: "B", text: "9x⁵y⁴" },
-          { letter: "C", text: "9x⁶y⁴" },
-          { letter: "D", text: "6x⁶y⁴" },
+          { letter: "A", text: "x = −2 only" },
+          { letter: "B", text: "x = 5 only" },
+          { letter: "C", text: "x = 5 or x = −2" },
+          { letter: "D", text: "x = 5 or x = 2" },
         ],
         answer: "C",
       },
       {
-        id: 21,
-        text: "A box contains 4 red cards, 5 blue cards, and 6 green cards. Two cards are drawn without replacement. What is the probability that both cards are blue?",
+        id: 20,
+        text: "The expression (x² − 9)/(x − 3) is equivalent to which of the following for x ≠ 3?",
         choices: [
-          { letter: "A", text: "2/21" },
-          { letter: "B", text: "1/7" },
-          { letter: "C", text: "25/225" },
-          { letter: "D", text: "5/14" },
+          { letter: "A", text: "x − 3" },
+          { letter: "B", text: "x + 3" },
+          { letter: "C", text: "x² − 3" },
+          { letter: "D", text: "x + 9" },
         ],
-        answer: "A",
+        answer: "B",
+      },
+      {
+        id: 21,
+        text: "A geometric sequence has first term 3 and common ratio 2. What is the 6th term?",
+        choices: [
+          { letter: "A", text: "48" },
+          { letter: "B", text: "96" },
+          { letter: "C", text: "64" },
+          { letter: "D", text: "192" },
+        ],
+        answer: "B",
       },
       {
         id: 22,
-        text: "The table shows values of a linear function. If f(0) = 7 and f(3) = 1, what is f(−2)?",
+        text: "If the discriminant of ax² + bx + c = 0 equals zero, which of the following must be true?",
         choices: [
-          { letter: "A", text: "9" },
-          { letter: "B", text: "11" },
-          { letter: "C", text: "13" },
-          { letter: "D", text: "15" },
+          { letter: "A", text: "The equation has two distinct real roots" },
+          { letter: "B", text: "The equation has no real roots" },
+          { letter: "C", text: "The equation has exactly one real root" },
+          { letter: "D", text: "The equation has two imaginary roots" },
         ],
-        answer: "B",
+        answer: "C",
       },
     ],
   },
