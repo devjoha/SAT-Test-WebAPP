@@ -9,14 +9,31 @@ Files you do NOT need to touch are marked as "Leave alone".
 
 ### `src/config.ts` ⭐ MOST IMPORTANT
 **Your main control panel.** Change things here and they update everywhere automatically.
-- Student name shown in all footers
+- Student name shown in all footers (automatically overwritten at login with the logged-in user's name)
 - Break duration (minutes between R&W and Math sections)
 - All colors used across the app (navy, blue, yellow, etc.)
 
 ---
 
+### `src/data/users.ts` ⭐ MOST IMPORTANT
+**All authorized user accounts live here.** This is where you add, remove, or change login credentials.
+
+Each user has this shape:
+```
+{
+  username: "shadow",        ← what they type to sign in (not case-sensitive)
+  password: "sat2026",       ← their password (case-sensitive)
+  displayName: "Shadow Qasimbayev",  ← full name shown in nav bar and footers
+  firstName: "Shadow",       ← first name used in the welcome greeting
+}
+```
+
+Only users listed here can sign in. Anyone else gets an error message.
+
+---
+
 ### `src/data/questions.ts` ⭐ MOST IMPORTANT
-**All 108 test questions live here.** This is where you add, edit, or remove questions.
+**All test questions live here.** This is where you add, edit, or remove questions.
 
 Each question has this shape:
 ```
@@ -34,11 +51,11 @@ Each question has this shape:
 }
 ```
 
-The file is divided into 4 sections (modules):
-1. Reading and Writing — Module 1 (27 questions)
-2. Reading and Writing — Module 2 (27 questions)
-3. Math — Module 1 (22 questions)
-4. Math — Module 2 (22 questions)
+The file is divided into 4 modules:
+1. Reading and Writing — Module 1 (27 questions, 32 min) → displays as "Section 1, Module 1: Reading and Writing"
+2. Reading and Writing — Module 2 (27 questions, 32 min) → displays as "Section 1, Module 2: Reading and Writing"
+3. Math — Module 1 (22 questions, 35 min) → displays as "Section 2, Module 1: Math"
+4. Math — Module 2 (22 questions, 35 min) → displays as "Section 2, Module 2: Math"
 
 > **Rule:** R&W questions MUST have a `passage` field (shows two panels).
 > Math questions do NOT use `passage` (shows one centered panel).
@@ -70,15 +87,16 @@ These files control what the user sees at each step of the test.
 
 ### `src/App.tsx`
 **The traffic controller.** Decides which screen to show based on where the user is in the test flow.
+Also holds the logged-in user state and passes it down to screens that need it.
 
 Flow it manages:
 ```
-StartScreen → TestScreen (R&W M1) → ReviewScreen → ModuleOverScreen
-           → TestScreen (R&W M2) → ReviewScreen → ModuleOverScreen
-           → BreakScreen
-           → TestScreen (Math M1) → ReviewScreen → ModuleOverScreen
-           → TestScreen (Math M2) → ReviewScreen → ModuleOverScreen
-           → DoneScreen
+LoginScreen → MenuScreen → StartScreen → TestScreen (R&W M1) → ReviewScreen → ModuleOverScreen
+                                       → TestScreen (R&W M2) → ReviewScreen → ModuleOverScreen
+                                       → BreakScreen
+                                       → TestScreen (Math M1) → ReviewScreen → ModuleOverScreen
+                                       → TestScreen (Math M2) → ReviewScreen → ModuleOverScreen
+                                       → DoneScreen
 ```
 
 You rarely need to edit this unless you want to add a completely new screen.
@@ -88,6 +106,17 @@ You rarely need to edit this unless you want to add a completely new screen.
 ### `src/components/QuestionPaletteModal.tsx`
 The pop-up panel that appears when you click "Question X of Y" in the footer.
 Shows all question numbers, which are answered, and which are flagged.
+
+---
+
+## Notable Features in TestScreen
+
+- **Section header** — automatically formats to "Section X, Module Y: Subject" based on the module name
+- **Desmos Graphing Calculator** — clicking Calculator in a Math module loads the real Desmos calculator via their public API (loaded once, reused)
+- **Annotate tool** — shown in R&W modules (pencil icon); Calculator + Reference shown in Math modules
+- **Cross-out** — right-click an answer choice to strike it through; click Undo to restore
+- **Mark for Review** — bookmark toggle in the question header
+- **Timer** — show/hide toggle; turns red when under 5 minutes remain
 
 ---
 
@@ -101,7 +130,7 @@ These are auto-generated or utility files. You do not need to touch them.
 | `src/lib/utils.ts` | One small helper function |
 | `src/hooks/` | Two small utility hooks (toast + mobile detection) |
 | `src/pages/not-found.tsx` | 404 page if someone goes to a wrong URL |
-| `src/components/ui/` | A folder of ~40 pre-built UI components (buttons, dialogs, etc.) — none of them are used by the SAT app directly, they came with the template |
+| `src/components/ui/` | A folder of pre-built UI components — not used by the SAT app directly |
 
 ---
 
@@ -110,7 +139,6 @@ These are auto-generated or utility files. You do not need to touch them.
 | File | What it does |
 |------|-------------|
 | `vite.config.ts` | Build tool config — leave alone |
-| `tailwind.config.ts` | Tailwind CSS config — leave alone |
 | `tsconfig.json` | TypeScript settings — leave alone |
 | `package.json` | Lists the app's dependencies — leave alone |
 | `index.html` | The HTML shell that loads the React app — leave alone |
@@ -121,7 +149,8 @@ These are auto-generated or utility files. You do not need to touch them.
 
 | What you want to change | File to open |
 |------------------------|-------------|
-| Student name | `src/config.ts` |
+| Add/remove a login account | `src/data/users.ts` |
+| Student name (fallback) | `src/config.ts` |
 | Break duration | `src/config.ts` |
 | App colors | `src/config.ts` |
 | A question's text or answer options | `src/data/questions.ts` |
@@ -129,4 +158,6 @@ These are auto-generated or utility files. You do not need to touch them.
 | How the test screen looks | `src/index.css` or `src/screens/TestScreen.tsx` |
 | The congratulations page | `src/screens/DoneScreen.tsx` |
 | The break page | `src/screens/BreakScreen.tsx` |
-| The start/login page | `src/screens/StartScreen.tsx` |
+| The login page | `src/screens/LoginScreen.tsx` |
+| The menu/dashboard | `src/screens/MenuScreen.tsx` |
+| The start-code entry page | `src/screens/StartScreen.tsx` |
