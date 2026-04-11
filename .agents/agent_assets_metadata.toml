@@ -6,3 +6,9 @@ id = "W4ED5Yy7gegOT_sm3-Lkt"
 uri = "file://artifacts/sat-bluebook/STRUCTURE.md"
 type = "text"
 title = "SAT Bluebook — File Structure Guide"
+
+[[outputs]]
+id = "nZxI4Ghd49zt7oKdy-HaV"
+uri = "file://SETUP.md"
+type = "text"
+title = "Arch Linux Setup Guide"
