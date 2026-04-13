@@ -61,8 +61,8 @@ A pixel-perfect replica of the College Board's Bluebook digital SAT interface.
   - Question palette modal (pop-up from bottom pill)
   - Directions dropdown (content varies by section type)
 - **BreakScreen** — dark theme, live countdown timer, break rules, Resume button
-- **ReviewScreen** — "Check Your Work" page with question grid, Back/Submit buttons
-- **ModuleOverScreen** — auto-advances after 3s with CSS spinner
+- **ReviewScreen** — College Board-style "Check Your Work" page with full test header, practice banner, question grid card, and Back/Next footer
+- **ModuleOverScreen** — auto-advances after 3s with dot spinner
 - **DoneScreen** — completion summary with questions answered count
 
 ### Data

@@ -1,142 +1,73 @@
 import { useState } from "react";
 import { authenticate, type User } from "../data/users";
 
-const BG = "#3b3ff2";
+const BG = "#3349c9";
+const LINK = "#27346d";
 
-// ── Bluebook 4-pointed star logo (matches real Bluebook spark shape) ──
-const BluebookStar = ({ size = 28, color = "white" }: { size?: number; color?: string }) => (
-  <svg width={size} height={size} viewBox="0 0 32 32" fill="none">
-    <path
-      d="M16 1 C15.2 8.5 8.5 15.2 1 16 C8.5 16.8 15.2 23.5 16 31 C16.8 23.5 23.5 16.8 31 16 C23.5 15.2 16.8 8.5 16 1 Z"
-      fill={color}
-    />
+const BluebookStar = ({ size = 54, color = "white", opacity = 1 }: { size?: number; color?: string; opacity?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 64 64" fill="none" style={{ opacity }}>
+    <path d="M30 4 L38 27 L60 15 L43 34 L58 54 L36 42 L28 62 L27 39 L4 48 L23 31 L9 9 L30 22 Z" fill={color} />
   </svg>
 );
 
-const BluebookLogo = ({ large = true }: { large?: boolean }) => (
-  <div style={{ display: "flex", alignItems: "center", gap: large ? 10 : 6, userSelect: "none" }}>
-    <BluebookStar size={large ? 30 : 18} color="white" />
-    <span
-      style={{
-        fontSize: large ? 27 : 17,
-        fontWeight: 700,
-        color: "#fff",
-        letterSpacing: "-0.5px",
-        fontFamily: "'Georgia', 'Times New Roman', serif",
-      }}
-    >
-      Bluebook
-      <sup style={{ fontSize: large ? 12 : 8, fontWeight: 400, letterSpacing: 0 }}>™</sup>
-    </span>
+const BluebookLogo = () => (
+  <div style={{ display: "flex", alignItems: "center", gap: 8, color: "#fff", userSelect: "none" }}>
+    <BluebookStar size={62} />
+    <div style={{ fontSize: 48, fontWeight: 800, letterSpacing: "-1.8px", lineHeight: 1 }}>
+      Bluebook<sup style={{ fontSize: 12, marginLeft: 4, verticalAlign: "top" }}>™</sup>
+    </div>
   </div>
 );
 
 const TicketIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-    <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/>
-    <path d="m9 12 2 2 4-4"/>
-  </svg>
-);
-
-const EyeIcon = ({ open }: { open: boolean }) => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-    strokeLinecap="round" strokeLinejoin="round">
-    {open ? (
-      <>
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-        <circle cx="12" cy="12" r="3"/>
-      </>
-    ) : (
-      <>
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
-        <line x1="1" y1="1" x2="23" y2="23"/>
-      </>
-    )}
-  </svg>
-);
-
-const BackArrow = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-    strokeLinecap="round" strokeLinejoin="round">
-    <polyline points="15 18 9 12 15 6"/>
-  </svg>
-);
-
-const Spinner = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"
-    strokeLinecap="round" style={{ animation: "spin 0.8s linear infinite" }}>
-    <path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/>
+  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 9.5 9.5 3l2.1 2.1a2.2 2.2 0 0 0 3.1 3.1l2.1 2.1-6.5 6.5-2.1-2.1a2.2 2.2 0 0 0-3.1-3.1L3 9.5Z" />
+    <path d="m9 7 8 8" />
   </svg>
 );
 
 const BottomIllustration = () => (
-  <svg
-    viewBox="0 0 1024 180"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{ position: "absolute", bottom: 0, left: 0, width: "100%", height: 180, pointerEvents: "none" }}
-    preserveAspectRatio="xMidYMax meet"
-  >
-    <line x1="0" y1="155" x2="1024" y2="155" stroke="white" strokeOpacity="0.18" strokeWidth="1.5"/>
-    {/* Laptop */}
-    <rect x="40" y="80" width="110" height="72" rx="4" stroke="white" strokeOpacity="0.32" strokeWidth="2"/>
-    <rect x="44" y="84" width="102" height="58" rx="2" stroke="white" strokeOpacity="0.18" strokeWidth="1.5"/>
-    <rect x="50" y="90" width="48" height="36" rx="2" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="104" y="94" width="36" height="6" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="104" y="104" width="36" height="6" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="104" y="114" width="28" height="6" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="20" y="152" width="150" height="5" rx="2.5" stroke="white" strokeOpacity="0.18" strokeWidth="1.5"/>
-    <text x="28" y="150" fill="white" fillOpacity="0.28" fontSize="26" fontFamily="Georgia, serif" fontWeight="700">X²</text>
-    {/* Star */}
-    <path d="M232 105 C231 113 224 120 216 121 C224 122 231 129 232 137 C233 129 240 122 248 121 C240 120 233 113 232 105 Z"
-      stroke="white" strokeOpacity="0.28" strokeWidth="1.5" fill="none"/>
-    {/* Calculator */}
-    <rect x="320" y="88" width="60" height="68" rx="4" stroke="white" strokeOpacity="0.32" strokeWidth="2"/>
-    <rect x="328" y="96" width="44" height="18" rx="2" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="333" cy="124" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="350" cy="124" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="367" cy="124" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="333" cy="140" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="350" cy="140" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <circle cx="367" cy="140" r="4" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    {/* Stopwatch */}
-    <circle cx="450" cy="118" r="37" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <circle cx="450" cy="118" r="27" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <line x1="450" y1="91" x2="450" y2="118" stroke="white" strokeOpacity="0.32" strokeWidth="2" strokeLinecap="round"/>
-    <line x1="450" y1="118" x2="466" y2="106" stroke="white" strokeOpacity="0.32" strokeWidth="2" strokeLinecap="round"/>
-    <rect x="443" y="75" width="14" height="6" rx="3" stroke="white" strokeOpacity="0.28" strokeWidth="1.5"/>
-    <line x1="436" y1="71" x2="430" y2="64" stroke="white" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round"/>
-    <line x1="464" y1="71" x2="470" y2="64" stroke="white" strokeOpacity="0.25" strokeWidth="2" strokeLinecap="round"/>
-    {/* Books stack */}
-    <rect x="545" y="108" width="80" height="12" rx="2" stroke="white" strokeOpacity="0.32" strokeWidth="2"/>
-    <rect x="550" y="97" width="72" height="12" rx="2" stroke="white" strokeOpacity="0.26" strokeWidth="1.5"/>
-    <rect x="555" y="86" width="66" height="12" rx="2" stroke="white" strokeOpacity="0.2" strokeWidth="1.5"/>
-    {/* Open book */}
-    <path d="M660 155 L660 93 Q680 83 700 93 L700 155" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <path d="M700 93 Q720 83 740 93 L740 155" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <line x1="660" y1="155" x2="740" y2="155" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <line x1="700" y1="93" x2="700" y2="155" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    {/* Signal waves */}
-    <path d="M790 130 Q800 110 810 130" stroke="white" strokeOpacity="0.28" strokeWidth="2" strokeLinecap="round"/>
-    <path d="M782 140 Q800 104 818 140" stroke="white" strokeOpacity="0.22" strokeWidth="2" strokeLinecap="round"/>
-    <circle cx="800" cy="143" r="3" fill="white" fillOpacity="0.28"/>
-    {/* Buildings */}
-    <rect x="840" y="95" width="30" height="60" rx="2" stroke="white" strokeOpacity="0.32" strokeWidth="2"/>
-    <rect x="875" y="75" width="40" height="80" rx="2" stroke="white" strokeOpacity="0.32" strokeWidth="2"/>
-    <rect x="920" y="100" width="28" height="55" rx="2" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <rect x="952" y="110" width="52" height="45" rx="2" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <rect x="847" y="105" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="847" y="120" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="883" y="83" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="897" y="83" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="883" y="100" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <rect x="897" y="100" width="8" height="8" rx="1" stroke="white" strokeOpacity="0.22" strokeWidth="1.5"/>
-    <path d="M883 75 Q895 56 907 75" stroke="white" strokeOpacity="0.28" strokeWidth="2"/>
-    <line x1="895" y1="56" x2="895" y2="75" stroke="white" strokeOpacity="0.28" strokeWidth="1.5"/>
-    {/* Clouds */}
-    <path d="M930 42 Q935 32 945 34 Q948 25 958 27 Q968 22 972 32 Q982 30 984 40 Q986 48 978 48 L933 48 Q926 48 930 42 Z"
-      stroke="white" strokeOpacity="0.18" strokeWidth="1.5" fill="none"/>
+  <svg viewBox="0 0 1024 250" style={{ position: "absolute", left: 0, bottom: 0, width: "100%", height: 250, pointerEvents: "none" }} preserveAspectRatio="xMidYMax slice">
+    <g stroke="#8aa0ee" strokeWidth="3" fill="none" opacity="0.34">
+      <BluebookStar size={90} color="#8aa0ee" opacity={0.34} />
+      <g transform="translate(0 74)">
+        <rect x="34" y="28" width="214" height="146" rx="4" />
+        <rect x="62" y="52" width="156" height="106" rx="2" />
+        <rect x="86" y="72" width="110" height="76" rx="3" />
+        <line x1="0" y1="178" x2="278" y2="178" />
+        <rect x="304" y="0" width="132" height="92" rx="8" />
+        <rect x="320" y="18" width="96" height="20" rx="3" />
+        <line x1="320" y1="52" x2="416" y2="52" />
+        <line x1="320" y1="70" x2="388" y2="70" />
+        <circle cx="360" cy="176" r="32" />
+        <line x1="360" y1="176" x2="360" y2="154" />
+        <line x1="360" y1="176" x2="376" y2="166" />
+        <rect x="464" y="112" width="54" height="74" rx="4" />
+        <rect x="474" y="124" width="34" height="14" rx="2" />
+        <g transform="translate(476 148)"><circle cx="0" cy="0" r="3"/><circle cx="14" cy="0" r="3"/><circle cx="28" cy="0" r="3"/><circle cx="0" cy="16" r="3"/><circle cx="14" cy="16" r="3"/><circle cx="28" cy="16" r="3"/></g>
+        <path d="M548 108 Q598 82 648 108 V188 Q598 162 548 188 Z" />
+        <path d="M648 108 Q698 82 748 108 V188 Q698 162 648 188 Z" />
+        <rect x="770" y="106" width="46" height="78" rx="2" />
+        <line x1="816" y1="158" x2="870" y2="104" />
+        <rect x="780" y="116" width="26" height="22" />
+        <path d="M852 104 884 136" />
+        <rect x="842" y="90" width="154" height="96" rx="3" />
+        <path d="M866 90 Q919 26 972 90" />
+        <line x1="919" y1="46" x2="919" y2="90" />
+        <rect x="888" y="126" width="24" height="60" rx="12" />
+        <rect x="862" y="108" width="18" height="22" /><rect x="958" y="108" width="18" height="22" />
+      </g>
+      <path d="M944 73 Q958 47 982 58 Q995 32 1019 54 Q1045 50 1054 76" />
+      <path d="M754 116 Q766 101 778 116" />
+    </g>
+  </svg>
+);
+
+const EyeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6-10-6-10-6Z" />
+    <circle cx="12" cy="12" r="2.6" />
+    <line x1="4" y1="20" x2="20" y2="4" />
   </svg>
 );
 
@@ -150,363 +81,111 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
   const [view, setView] = useState<LoginView>("buttons");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  function resetForm() {
+  const canSubmit = username.trim().length > 0 && password.length > 0 && !loading;
+
+  function goBack() {
+    setView("buttons");
     setUsername("");
     setPassword("");
-    setShowPassword(false);
     setError(null);
     setLoading(false);
   }
 
-  function goBack() {
-    resetForm();
-    setView("buttons");
-  }
-
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!username.trim() || !password) return;
+    if (!canSubmit) return;
     setError(null);
     setLoading(true);
-    // Small delay to simulate a network call
     setTimeout(() => {
       const user = authenticate(username.trim(), password);
-      if (user) {
-        onLogin(user);
-      } else {
-        setError("The username or password you entered is incorrect.");
+      if (user) onLogin(user);
+      else {
+        setError("The email address or password you entered is incorrect.");
         setLoading(false);
       }
-    }, 500);
+    }, 350);
   }
-
-  const canSubmit = username.trim().length > 0 && password.length > 0 && !loading;
 
   const inputStyle: React.CSSProperties = {
     width: "100%",
-    padding: "11px 14px",
-    fontSize: 15,
-    fontFamily: "inherit",
-    border: "1.5px solid #d0d0d0",
-    borderRadius: 8,
+    height: 60,
+    border: "1.4px solid #7d7d7d",
+    borderRadius: 10,
+    padding: "0 14px",
+    fontSize: 17,
     outline: "none",
     background: "#fff",
     color: "#111",
-    boxSizing: "border-box",
-    transition: "border-color 0.15s",
+    fontFamily: "inherit",
   };
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        background: BG,
-        fontFamily: "'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-      }}
-    >
-      {/* Spinner keyframe */}
-      <style>{`@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }`}</style>
-
-      {/* Top bar */}
-      <div style={{ display: "flex", justifyContent: "flex-end", padding: "16px 24px", flexShrink: 0 }}>
-        <button
-          style={{
-            background: "transparent",
-            border: "1.5px solid rgba(255,255,255,0.65)",
-            color: "#fff",
-            borderRadius: 9999,
-            padding: "8px 20px",
-            fontSize: 14,
-            fontWeight: 500,
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            fontFamily: "inherit",
-            transition: "background 0.15s",
-          }}
-          onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(255,255,255,0.1)"; }}
-          onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="2" y="3" width="20" height="14" rx="2"/>
-            <path d="m8 21 4-4 4 4"/><path d="M12 17v4"/>
-          </svg>
+    <div style={{ position: "fixed", inset: 0, background: BG, fontFamily: "Arial, Helvetica, sans-serif", overflow: "hidden", color: "#111" }}>
+      <div style={{ position: "absolute", top: 10, right: 34 }}>
+        <button style={{ height: 68, padding: "0 32px", borderRadius: 999, border: "2px solid #fff", boxShadow: "inset 0 0 0 1px rgba(0,0,0,.75)", background: "rgba(255,255,255,.34)", color: "#111", fontWeight: 800, fontSize: 17, cursor: "pointer", textDecoration: "underline", display: "flex", alignItems: "center", gap: 10 }}>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="7" width="14" height="9" rx="1"/><path d="M8 19h8M12 16v3"/></svg>
           Test Your Device
         </button>
       </div>
 
-      {/* Center content */}
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0 24px 160px",
-          gap: 28,
-        }}
-      >
-        {/* Logo */}
-        <BluebookLogo large />
+      <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "82px 24px 136px", position: "relative", zIndex: 1 }}>
+        <BluebookLogo />
 
-        {/* Card */}
-        <div
-          style={{
-            background: "#fff",
-            borderRadius: 12,
-            padding: view === "buttons" ? "36px 48px 32px" : "28px 48px 32px",
-            width: "100%",
-            maxWidth: 460,
-            boxShadow: "0 8px 40px rgba(0,0,0,0.2)",
-            transition: "padding 0.2s",
-          }}
-        >
+        <div style={{ marginTop: 34, width: "100%", maxWidth: view === "buttons" ? 570 : 572, background: "#fff", borderRadius: 18, padding: view === "buttons" ? "39px 40px 38px" : "20px 40px 45px", boxShadow: "0 1px 0 rgba(0,0,0,.12)", minHeight: view === "buttons" ? 480 : 638 }}>
           {view === "buttons" ? (
             <>
-              <h1 style={{ fontSize: 26, fontWeight: 700, color: "#111", textAlign: "center", margin: "0 0 28px", fontFamily: "inherit" }}>
-                Sign In
-              </h1>
-
-              {/* Yellow primary button */}
-              <button
-                onClick={() => setView("ticket")}
-                style={{
-                  width: "100%",
-                  background: "#f5c518",
-                  border: "none",
-                  borderRadius: 9999,
-                  padding: "14px 24px",
-                  fontSize: 15,
-                  fontWeight: 700,
-                  color: "#111",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 10,
-                  fontFamily: "inherit",
-                  boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                  transition: "filter 0.15s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.filter = "brightness(0.94)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.filter = "brightness(1)"; }}
-              >
-                <TicketIcon />
-                Use a sign-in ticket from your school
+              <h1 style={{ textAlign: "center", fontSize: 38, lineHeight: 1, fontWeight: 800, margin: "3px 0 43px" }}>Sign In</h1>
+              <button onClick={() => setView("ticket")} style={{ width: "100%", height: 60, borderRadius: 999, border: "1.6px solid #111", background: "#ffd80c", fontSize: 17, fontWeight: 800, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 12 }}>
+                <TicketIcon /> Use a sign-in ticket from your school
               </button>
-
-              {/* OR divider */}
-              <div style={{ display: "flex", alignItems: "center", gap: 12, margin: "20px 0" }}>
-                <div style={{ flex: 1, height: 1, background: "#e0e0e0" }} />
-                <span style={{ fontSize: 13, color: "#999", fontWeight: 500 }}>OR</span>
-                <div style={{ flex: 1, height: 1, background: "#e0e0e0" }} />
+              <div style={{ display: "flex", alignItems: "center", margin: "36px 0", gap: 10 }}>
+                <div style={{ flex: 1, height: 1, background: "#d8d8d8" }} /><span style={{ fontSize: 22, color: "#222" }}>OR</span><div style={{ flex: 1, height: 1, background: "#d8d8d8" }} />
               </div>
-
-              {/* Outlined secondary button */}
-              <button
-                onClick={() => setView("account")}
-                style={{
-                  width: "100%",
-                  background: "#fff",
-                  border: "1.5px solid #bbb",
-                  borderRadius: 9999,
-                  padding: "13px 24px",
-                  fontSize: 14,
-                  fontWeight: 500,
-                  color: "#111",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: "inherit",
-                  transition: "border-color 0.15s, background 0.15s",
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.borderColor = "#555"; e.currentTarget.style.background = "#f7f7f7"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.borderColor = "#bbb"; e.currentTarget.style.background = "#fff"; }}
-              >
+              <button onClick={() => setView("account")} style={{ width: "100%", height: 62, borderRadius: 999, border: "1.7px solid #111", background: "#fff", fontSize: 16, fontWeight: 800, cursor: "pointer" }}>
                 Sign in with a College Board student account
               </button>
-
-              {/* Footer links */}
-              <div style={{ marginTop: 24, display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
-                <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: 14, color: BG, textDecoration: "underline" }}>
-                  I&apos;m an educator
-                </a>
-                <a href="#" onClick={(e) => e.preventDefault()} style={{ fontSize: 14, color: BG, textDecoration: "underline" }}>
-                  Need help signing in?
-                </a>
+              <div style={{ marginTop: 43, display: "flex", flexDirection: "column", alignItems: "center", gap: 18, fontSize: 18 }}>
+                <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: "underline" }}>I'm an educator</a>
+                <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: "underline" }}>Need help signing in?</a>
               </div>
             </>
           ) : (
-            /* ── Login Form ── */
-            <form onSubmit={handleSubmit} noValidate>
-              {/* Back button */}
-              <button
-                type="button"
-                onClick={goBack}
-                style={{
-                  background: "none",
-                  border: "none",
-                  cursor: "pointer",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 4,
-                  fontSize: 13,
-                  color: "#555",
-                  fontFamily: "inherit",
-                  padding: "0 0 16px",
-                  fontWeight: 500,
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = "#111"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = "#555"; }}
-              >
-                <BackArrow />
-                Sign in options
+            <form onSubmit={handleSubmit}>
+              <button type="button" onClick={goBack} style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", color: "#111", fontWeight: 800, fontSize: 16, cursor: "pointer", padding: "0 0 33px" }}>
+                <span style={{ width: 28, height: 28, border: "1px solid #e3e3e3", borderRadius: 5, display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#555", fontSize: 22, lineHeight: 1 }}>‹</span>
+                Back
               </button>
-
-              <h1 style={{ fontSize: 24, fontWeight: 700, color: "#111", margin: "0 0 24px", fontFamily: "inherit" }}>
-                {view === "ticket" ? "Sign In with School Ticket" : "Sign In"}
+              <h1 style={{ fontSize: 36, lineHeight: 1.08, fontWeight: 800, margin: "0 0 56px" }}>
+                {view === "ticket" ? "Sign In with School Ticket" : "Sign In with a Student Account"}
               </h1>
-
-              {/* Username */}
-              <div style={{ marginBottom: 16 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#333", marginBottom: 6 }}>
-                  Username
-                </label>
-                <input
-                  type="text"
-                  autoComplete="username"
-                  autoFocus
-                  value={username}
-                  onChange={(e) => { setUsername(e.target.value); setError(null); }}
-                  style={inputStyle}
-                  placeholder="Enter your username"
-                  onFocus={(e) => { e.currentTarget.style.borderColor = BG; }}
-                  onBlur={(e) => { e.currentTarget.style.borderColor = "#d0d0d0"; }}
-                />
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontSize: 20, fontWeight: 800, marginBottom: 9 }}>{view === "ticket" ? "Ticket Number" : "Email Address"}</label>
+                <input value={username} onChange={(e) => { setUsername(e.target.value); setError(null); }} style={inputStyle} autoFocus autoComplete="username" />
               </div>
-
-              {/* Password */}
-              <div style={{ marginBottom: 8 }}>
-                <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#333", marginBottom: 6 }}>
-                  Password
-                </label>
+              <div style={{ marginBottom: 5 }}>
+                <label style={{ display: "block", fontSize: 20, fontWeight: 800, marginBottom: 9 }}>Password</label>
                 <div style={{ position: "relative" }}>
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                    style={{ ...inputStyle, paddingRight: 44 }}
-                    placeholder="Enter your password"
-                    onFocus={(e) => { e.currentTarget.style.borderColor = BG; }}
-                    onBlur={(e) => { e.currentTarget.style.borderColor = "#d0d0d0"; }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword((s) => !s)}
-                    style={{
-                      position: "absolute",
-                      right: 12,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "none",
-                      border: "none",
-                      cursor: "pointer",
-                      color: "#888",
-                      padding: 2,
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                    title={showPassword ? "Hide password" : "Show password"}
-                  >
-                    <EyeIcon open={showPassword} />
-                  </button>
+                  <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} style={{ ...inputStyle, paddingRight: 48 }} autoComplete="current-password" />
+                  <span style={{ position: "absolute", right: 18, top: "50%", transform: "translateY(-50%)", color: "#555" }}><EyeIcon /></span>
                 </div>
               </div>
-
-              {/* Error message */}
-              {error && (
-                <div
-                  style={{
-                    background: "#fef2f2",
-                    border: "1px solid #fca5a5",
-                    borderRadius: 8,
-                    padding: "10px 14px",
-                    fontSize: 13,
-                    color: "#dc2626",
-                    marginBottom: 12,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                  }}
-                >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-                  </svg>
-                  {error}
-                </div>
-              )}
-
-              {/* Sign In button */}
-              <button
-                type="submit"
-                disabled={!canSubmit}
-                style={{
-                  width: "100%",
-                  background: canSubmit ? BG : "#9396f0",
-                  border: "none",
-                  borderRadius: 9999,
-                  padding: "14px 24px",
-                  fontSize: 15,
-                  fontWeight: 700,
-                  color: "#fff",
-                  cursor: canSubmit ? "pointer" : "default",
-                  fontFamily: "inherit",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: 8,
-                  marginTop: 4,
-                  transition: "background 0.15s, filter 0.15s",
-                }}
-                onMouseEnter={(e) => { if (canSubmit) e.currentTarget.style.filter = "brightness(1.1)"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.filter = "brightness(1)"; }}
-              >
-                {loading ? <><Spinner /> Signing in…</> : "Sign In"}
+              <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: "underline", fontSize: 18 }}>Forgot password?</a>
+              {error && <div style={{ marginTop: 16, color: "#b91c1c", fontWeight: 700, fontSize: 14 }}>{error}</div>}
+              <button type="submit" disabled={!canSubmit} style={{ width: "100%", height: 60, marginTop: error ? 36 : 53, borderRadius: 999, border: "1.3px solid #8f8f8f", background: canSubmit ? "#3349c9" : "#f2f2f2", color: canSubmit ? "#fff" : "#7f7f7f", fontSize: 17, fontWeight: 800, cursor: canSubmit ? "pointer" : "default" }}>
+                {loading ? "Submitting…" : "Submit"}
               </button>
+              <div style={{ textAlign: "center", marginTop: 44 }}>
+                <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: "underline", fontSize: 20 }}>Need help signing in?</a>
+              </div>
             </form>
           )}
         </div>
       </div>
-
-      {/* Bottom illustrations */}
       <BottomIllustration />
-
-      {/* Version label */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: 8,
-          right: 14,
-          fontSize: 11,
-          color: "rgba(255,255,255,0.35)",
-          fontFamily: "monospace",
-          pointerEvents: "none",
-        }}
-      >
-        VSN-0.9.605 BT:2026-03-12 20:36
-      </div>
+      <div style={{ position: "absolute", right: 8, bottom: 8, background: "rgba(255,255,255,.85)", color: "#333", fontSize: 12, fontFamily: "monospace", padding: "7px 8px" }}>VSN-0.9.605 BT:2026-03-12 20:36</div>
     </div>
   );
 }

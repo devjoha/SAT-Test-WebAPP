@@ -32,10 +32,11 @@ const BookmarkIcon = ({ filled }: { filled: boolean }) => (
     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
   </svg>
 );
-const AnnotateIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+const HighlightsIcon = () => (
+  <svg width="31" height="18" viewBox="0 0 31 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="m5.5 12.5-3 3 .8-4.1L9.7 5a1.8 1.8 0 0 1 2.6 2.6L5.5 12.5Z" />
+    <path d="M15.5 2.5h10.8a1.2 1.2 0 0 1 1.2 1.2v10.6a1.2 1.2 0 0 1-1.2 1.2H15.5Z" />
+    <path d="M18.5 6h6M18.5 9h6M18.5 12h4" />
   </svg>
 );
 const MoreIcon = () => (
@@ -283,7 +284,7 @@ export default function TestScreen({
           ) : (
             <>
               <button className="tool-item">
-                <AnnotateIcon /><span>Annotate</span>
+                <HighlightsIcon /><span>Highlights &amp; Notes</span>
               </button>
               <button className="tool-item">
                 <MoreIcon /><span>More</span>
@@ -374,22 +375,13 @@ export default function TestScreen({
                     <div className="option-text">{choice.text}</div>
                   </div>
 
-                  {isCrossed ? (
-                    <button
-                      className="undo-btn"
-                      onClick={() => onToggleCrossOut(choice.letter)}
-                    >
-                      Undo
-                    </button>
-                  ) : (
-                    <button
-                      className="crossout-circle"
-                      onClick={() => onToggleCrossOut(choice.letter)}
-                      title={`Eliminate choice ${choice.letter}`}
-                    >
-                      {choice.letter}
-                    </button>
-                  )}
+                  <button
+                    className={isCrossed ? "undo-btn" : "crossout-circle"}
+                    onClick={() => onToggleCrossOut(choice.letter)}
+                    title={isCrossed ? `Undo eliminate choice ${choice.letter}` : `Eliminate choice ${choice.letter}`}
+                  >
+                    {isCrossed ? "Undo" : choice.letter}
+                  </button>
                 </div>
               );
             })}

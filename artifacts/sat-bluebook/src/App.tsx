@@ -178,8 +178,11 @@ export default function App() {
         moduleName={currentModule.name}
         totalQuestions={currentModule.questions.length}
         currentQuestion={currentQuestion}
+        timeRemaining={timeRemaining}
+        timerHidden={timerHidden}
         answers={currentState.answers}
         flagged={currentState.flagged}
+        onToggleTimer={() => setTimerHidden((h) => !h)}
         onNavigate={(n) => { setCurrentQuestion(n); setScreen("test"); }}
         onReturnToTest={() => setScreen("test")}
         onSubmit={handleSubmit}
