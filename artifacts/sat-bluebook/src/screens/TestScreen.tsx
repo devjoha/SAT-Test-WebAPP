@@ -295,12 +295,12 @@ export default function TestScreen({
       </header>
 
       {/* ── PRACTICE TEST BANNER ── */}
-      <div className="practice-test-banner">THIS IS A PRACTICE TEST</div>
+      {/* <div className="practice-test-banner"></div> */}
 
       {/* ── DIRECTIONS DROPDOWN ── */}
       {showDirections && (
-        <div style={{ position: "absolute", top: 80, left: 0, right: 0, zIndex: 60, display: "flex", justifyContent: "center", padding: "0 20px" }}>
-          <div style={{ background: "#fff", border: "2px solid #f5a623", borderRadius: 4, padding: "22px 28px 18px", maxWidth: 700, width: "100%", boxShadow: "0 6px 24px rgba(0,0,0,0.13)" }}>
+        <div style={{  position: "absolute", top: 80, left: -100, right: 0, zIndex: 60, display: "flex", justifyContent: "center", padding: "0 20px" }}>
+          <div style={{ background: "#f0f0f0", border: "#f0f0f0", padding: "22px 28px 18px", maxWidth: 1600, height: 795, width: "100%", boxShadow: "0 6px 24px rgba(0,0,0,0.13)" }}>
             <p style={{ fontSize: 15, lineHeight: 1.7, color: "#111", marginBottom: 12 }}>
               {isMath
                 ? "The questions in this section address a number of important math skills. Use of a calculator is permitted for all questions. A reference sheet, calculator, and these directions can be accessed throughout the test."
@@ -312,7 +312,7 @@ export default function TestScreen({
                 : "All questions in this section are multiple-choice with four answer choices. Each question has a single best answer."}
             </p>
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <button onClick={() => setShowDirections(false)} style={{ background: "#f5c518", color: "#111", border: "none", borderRadius: 9999, padding: "8px 24px", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
+              <button onClick={() => setShowDirections(false)} style={{ position: "absolute", bottom: 18, background: "#f5c518", color: "#111", border: "1px solid #4b4343", borderRadius: 9999, padding: "8px 24px", fontSize: 15, fontWeight: 900, cursor: "pointer" }}>
                 Close
               </button>
             </div>

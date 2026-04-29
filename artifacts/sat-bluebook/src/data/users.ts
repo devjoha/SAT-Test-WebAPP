@@ -22,13 +22,12 @@ export const USERS: User[] = [
     displayName: "Jahongir Qasimbayev",
     firstName: "Jahongir",
   },
-  // ── Add more students below ──
-  // {
-  //   username: "john",
-  //   password: "pass123",
-  //   displayName: "John Smith",
-  //   firstName: "John",
-  // },
+  {
+    username: "masha@masha.com",
+    password: "masha",
+    displayName: "Xabiba Xayrullaeva",
+    firstName: "Xabiba",
+  },
 ];
 
 // Returns the matching user or null if credentials are wrong
