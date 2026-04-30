@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import type { Module } from "../data/questions";
 import QuestionPaletteModal from "../components/QuestionPaletteModal";
-import { APP_CONFIG } from "../config";
+import type { User } from "../data/users";
 
 function formatTime(seconds: number): string {
   const m = Math.floor(seconds / 60);
@@ -184,6 +184,7 @@ function DesmosCalculator({ onClose }: { onClose: () => void }) {
 }
 
 interface TestScreenProps {
+  user: User;
   module: Module;
   currentQuestion: number;
   answers: Record<number, string>;
@@ -204,6 +205,7 @@ interface TestScreenProps {
 
 export default function TestScreen({
   module,
+  user,
   currentQuestion,
   answers,
   flagged,
@@ -391,7 +393,7 @@ export default function TestScreen({
 
       {/* ── FOOTER ── */}
       <footer className="test-footer">
-        <span className="user-name">{APP_CONFIG.studentName}</span>
+        <span className="user-name">{user.displayName}</span>
 
         <button className="question-nav-pill" onClick={() => setShowPalette(true)}>
           Question {currentQuestion} of {totalQuestions} <ChevronUp />

