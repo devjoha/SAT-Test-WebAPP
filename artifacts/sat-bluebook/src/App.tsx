@@ -13,6 +13,21 @@ import ModuleOverScreen from "./screens/ModuleOverScreen";
 
 type Screen = "login" | "menu" | "start" | "test" | "break" | "review" | "moduleOver" | "done";
 
+const SESSION_STORAGE_KEY = "sat-bluebook:user";
+
+function loadStoredUser(): User | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as User;
+    if (parsed && typeof parsed.username === "string") return parsed;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export interface ModuleState {
   answers: Record<number, string>;
   flagged: Set<number>;
@@ -24,8 +39,13 @@ function makeEmptyModuleState(): ModuleState {
 }
 
 export default function App() {
-  const [screen, setScreen] = useState<Screen>("login");
-  const [loggedInUser, setLoggedInUser] = useState<User | null>(null);
+  const initialUser = loadStoredUser();
+  const [screen, setScreen] = useState<Screen>(initialUser ? "menu" : "login");
+  const [loggedInUser, setLoggedInUser] = useState<User | null>(initialUser);
+
+  if (initialUser) {
+    APP_CONFIG.studentName = initialUser.displayName;
+  }
   const [moduleIndex, setModuleIndex] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(1);
   const [timeRemaining, setTimeRemaining] = useState(0);
@@ -149,6 +169,11 @@ export default function App() {
       onLogin={(user) => {
         setLoggedInUser(user);
         APP_CONFIG.studentName = user.displayName;
+        try {
+          window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+        } catch {
+          // ignore storage errors (private mode, quota, etc.)
+        }
         setScreen("menu");
       }}
     />
