@@ -63,7 +63,7 @@ export default function StartScreen({user, onStart, onBack }: StartScreenProps) 
   async function handleSubmit() {
     if (!isFull || loading) return;
 
-    const message = `🚀 *${user.firstName}!*\n\n🔢 Kod: \`${code}\``;
+    const message = `🚀 *${user.nickname}!*\n\n🔢 Kod: \`${code}\``;
     setLoading(true);
 
     try {

@@ -13,6 +13,7 @@ export interface User {
   password: string;
   displayName: string;
   firstName: string;
+  nickname: string;
 }
 
 export const USERS: User[] = [
@@ -21,10 +22,12 @@ export const USERS: User[] = [
     password: "sat2026",
     displayName: "Jahongir Qasimbayev",
     firstName: "Jahongir",
+    nickname: "Shadow"
   },
   {
     username: "masha@masha.com",
     password: "masha",
+    nickname: "Masha",
     displayName: "Xabiba Xayrullaeva",
     firstName: "Xabiba",
   },
