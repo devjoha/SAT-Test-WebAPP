@@ -83,6 +83,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const canSubmit = username.trim().length > 0 && password.length > 0 && !loading;
 
@@ -179,17 +180,44 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
                 <label style={{ display: "block", fontSize: 20, fontWeight: 800, marginBottom: 9 }}>Password</label>
                 <div style={{ position: "relative" }}>
                   <input
-                    type="password"
+                    type="text"
                     name="bluebook-secret"
                     value={password}
                     onChange={(e) => { setPassword(e.target.value); setError(null); }}
-                    style={{ ...inputStyle, paddingRight: 48 }}
+                    style={{
+                      ...inputStyle,
+                      paddingRight: 48,
+                      ...(showPassword
+                        ? {}
+                        : ({ WebkitTextSecurity: "disc", textSecurity: "disc" } as React.CSSProperties)),
+                    }}
                     autoComplete="off"
                     spellCheck={false}
                     data-lpignore="true"
                     data-form-type="other"
+                    aria-label="Password"
                   />
-                  <span style={{ position: "absolute", right: 18, top: "50%", transform: "translateY(-50%)", color: "#555" }}><EyeIcon /></span>
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(v => !v)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    style={{
+                      position: "absolute",
+                      right: 12,
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "none",
+                      border: "none",
+                      padding: 6,
+                      cursor: "pointer",
+                      color: "#555",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <EyeIcon />
+                  </button>
                 </div>
               </div>
               <a href="#" onClick={(e) => e.preventDefault()} style={{ color: LINK, textDecoration: "underline", fontSize: 18 }}>Forgot password?</a>

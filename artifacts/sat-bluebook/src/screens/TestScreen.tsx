@@ -221,18 +221,35 @@ export default function TestScreen({
   onNext,
   onNavigate,
   onReview,
+  onSubmit,
   onExit,
 }: TestScreenProps) {
-  function handleExit() {
-    const ok = window.confirm(
-      "Return to the home screen? Your current test progress will be cleared."
-    );
-    if (ok) onExit();
-  }
   const [showPalette, setShowPalette] = useState(false);
   const [showDirections, setShowDirections] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
   const [showReference, setShowReference] = useState(false);
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+  const [confirmAction, setConfirmAction] = useState<"exit" | "finish" | null>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showMoreMenu) return;
+    function handleDocClick(e: MouseEvent) {
+      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
+        setShowMoreMenu(false);
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowMoreMenu(false);
+    }
+    document.addEventListener("mousedown", handleDocClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleDocClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [showMoreMenu]);
 
   const question = module.questions[currentQuestion - 1];
   const totalQuestions = module.questions.length;
@@ -287,18 +304,48 @@ export default function TestScreen({
                 <span style={{ fontSize: 17, fontWeight: 700, lineHeight: 1 }}>x²</span>
                 <span>Reference</span>
               </button>
-              <button className="tool-item" onClick={handleExit} title="Return to home">
-                <MoreIcon /><span>More</span>
-              </button>
+              <div ref={isMath ? moreMenuRef : null} style={{ position: "relative" }}>
+                <button
+                  type="button"
+                  className={`tool-item${showMoreMenu ? " tool-item-active" : ""}`}
+                  onClick={() => setShowMoreMenu(v => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={showMoreMenu}
+                >
+                  <MoreIcon /><span>More</span>
+                </button>
+                {showMoreMenu && (
+                  <MoreMenu
+                    onHelp={() => { setShowMoreMenu(false); setShowHelp(true); }}
+                    onReturnHome={() => { setShowMoreMenu(false); setConfirmAction("exit"); }}
+                    onFinish={() => { setShowMoreMenu(false); setConfirmAction("finish"); }}
+                  />
+                )}
+              </div>
             </>
           ) : (
             <>
-              <button className="tool-item">
+              <button type="button" className="tool-item">
                 <HighlightsIcon /><span>Highlights &amp; Notes</span>
               </button>
-              <button className="tool-item" onClick={handleExit} title="Return to home">
-                <MoreIcon /><span>More</span>
-              </button>
+              <div ref={!isMath ? moreMenuRef : null} style={{ position: "relative" }}>
+                <button
+                  type="button"
+                  className={`tool-item${showMoreMenu ? " tool-item-active" : ""}`}
+                  onClick={() => setShowMoreMenu(v => !v)}
+                  aria-haspopup="menu"
+                  aria-expanded={showMoreMenu}
+                >
+                  <MoreIcon /><span>More</span>
+                </button>
+                {showMoreMenu && (
+                  <MoreMenu
+                    onHelp={() => { setShowMoreMenu(false); setShowHelp(true); }}
+                    onReturnHome={() => { setShowMoreMenu(false); setConfirmAction("exit"); }}
+                    onFinish={() => { setShowMoreMenu(false); setConfirmAction("finish"); }}
+                  />
+                )}
+              </div>
             </>
           )}
         </div>
@@ -474,6 +521,209 @@ export default function TestScreen({
           </div>
         </div>
       )}
+
+      {/* ── HELP MODAL ── */}
+      {showHelp && (
+        <ModalBackdrop onClose={() => setShowHelp(false)}>
+          <div style={modalCardStyle}>
+            <div style={modalHeaderStyle}>
+              <span>Help</span>
+              <button type="button" onClick={() => setShowHelp(false)} style={modalCloseBtnStyle} aria-label="Close">×</button>
+            </div>
+            <div style={{ padding: "18px 22px 22px", fontSize: 14, lineHeight: 1.6, color: "#111" }}>
+              <p style={{ marginBottom: 12 }}>
+                <strong>Mark for Review</strong> — flags a question so you can come back to it later.
+              </p>
+              <p style={{ marginBottom: 12 }}>
+                <strong>Eliminate Answer</strong> — click the circled letter on the right of an option (or right-click an option) to cross it out. Click <em>Undo</em> to bring it back.
+              </p>
+              <p style={{ marginBottom: 12 }}>
+                <strong>Question palette</strong> — open it from the pill at the bottom to jump between questions.
+              </p>
+              <p style={{ marginBottom: 12 }}>
+                <strong>Timer</strong> — use <em>Hide</em> / <em>Show</em> at the top to toggle the countdown. It turns red in the last 5 minutes.
+              </p>
+              <p style={{ marginBottom: 0 }}>
+                <strong>More menu</strong> — return to the home screen or finish the test from here.
+              </p>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", padding: "0 22px 18px" }}>
+              <button type="button" onClick={() => setShowHelp(false)} style={primaryBtnStyle}>Close</button>
+            </div>
+          </div>
+        </ModalBackdrop>
+      )}
+
+      {/* ── CONFIRM (return home / finish) ── */}
+      {confirmAction && (
+        <ModalBackdrop onClose={() => setConfirmAction(null)}>
+          <div style={modalCardStyle}>
+            <div style={modalHeaderStyle}>
+              <span>{confirmAction === "exit" ? "Return to Home Screen?" : "Finish Test?"}</span>
+              <button type="button" onClick={() => setConfirmAction(null)} style={modalCloseBtnStyle} aria-label="Close">×</button>
+            </div>
+            <div style={{ padding: "18px 22px 8px", fontSize: 14, lineHeight: 1.6, color: "#111" }}>
+              {confirmAction === "exit"
+                ? "Returning to the home screen will clear your current test progress. Are you sure?"
+                : "Finishing now will end the test and submit your answers. You won't be able to come back to change them. Continue?"}
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", gap: 10, padding: "16px 22px 18px" }}>
+              <button type="button" onClick={() => setConfirmAction(null)} style={secondaryBtnStyle}>Cancel</button>
+              <button
+                type="button"
+                onClick={() => {
+                  const action = confirmAction;
+                  setConfirmAction(null);
+                  if (action === "exit") onExit();
+                  else onSubmit();
+                }}
+                style={primaryBtnStyle}
+              >
+                {confirmAction === "exit" ? "Return Home" : "Finish Test"}
+              </button>
+            </div>
+          </div>
+        </ModalBackdrop>
+      )}
     </div>
   );
 }
+
+// ──────────────────────────────────────────────────────────────────────
+// More menu, modal, button styles
+// ──────────────────────────────────────────────────────────────────────
+
+function MoreMenu({
+  onHelp,
+  onReturnHome,
+  onFinish,
+}: {
+  onHelp: () => void;
+  onReturnHome: () => void;
+  onFinish: () => void;
+}) {
+  const itemStyle: React.CSSProperties = {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    width: "100%",
+    background: "none",
+    border: "none",
+    textAlign: "left",
+    padding: "10px 14px",
+    fontSize: 14,
+    color: "#111",
+    cursor: "pointer",
+    fontFamily: "inherit",
+  };
+  return (
+    <div
+      role="menu"
+      style={{
+        position: "absolute",
+        top: "calc(100% + 6px)",
+        right: 0,
+        background: "#fff",
+        border: "1px solid #d1d5db",
+        borderRadius: 8,
+        boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+        minWidth: 220,
+        padding: "6px 0",
+        zIndex: 70,
+      }}
+    >
+      <button type="button" role="menuitem" style={itemStyle} onClick={onHelp}>
+        <span style={{ width: 20, display: "inline-flex", justifyContent: "center" }}>?</span>
+        Help
+      </button>
+      <button type="button" role="menuitem" style={itemStyle} onClick={onReturnHome}>
+        <span style={{ width: 20, display: "inline-flex", justifyContent: "center" }}>⌂</span>
+        Return to Home Screen
+      </button>
+      <div style={{ height: 1, background: "#e5e7eb", margin: "4px 0" }} />
+      <button
+        type="button"
+        role="menuitem"
+        style={{ ...itemStyle, color: "#b91c1c", fontWeight: 700 }}
+        onClick={onFinish}
+      >
+        <span style={{ width: 20, display: "inline-flex", justifyContent: "center" }}>✓</span>
+        Finish Test
+      </button>
+    </div>
+  );
+}
+
+function ModalBackdrop({ children, onClose }: { children: React.ReactNode; onClose: () => void }) {
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: "fixed",
+        inset: 0,
+        background: "rgba(0,0,0,0.35)",
+        zIndex: 100,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+      }}
+    >
+      <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 460 }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+const modalCardStyle: React.CSSProperties = {
+  background: "#fff",
+  borderRadius: 8,
+  boxShadow: "0 12px 36px rgba(0,0,0,0.25)",
+  overflow: "hidden",
+};
+
+const modalHeaderStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "space-between",
+  padding: "12px 18px",
+  background: "#1a1f71",
+  color: "#fff",
+  fontWeight: 700,
+  fontSize: 15,
+};
+
+const modalCloseBtnStyle: React.CSSProperties = {
+  background: "none",
+  border: "none",
+  color: "#fff",
+  cursor: "pointer",
+  fontSize: 22,
+  lineHeight: 1,
+  padding: 0,
+};
+
+const primaryBtnStyle: React.CSSProperties = {
+  background: "#1a4fcf",
+  color: "#fff",
+  border: "none",
+  borderRadius: 9999,
+  padding: "8px 20px",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+  fontFamily: "inherit",
+};
+
+const secondaryBtnStyle: React.CSSProperties = {
+  background: "#fff",
+  color: "#111",
+  border: "1px solid #c0c4cc",
+  borderRadius: 9999,
+  padding: "8px 20px",
+  fontSize: 14,
+  fontWeight: 700,
+  cursor: "pointer",
+  fontFamily: "inherit",
+};
