@@ -13,20 +13,8 @@ import ModuleOverScreen from "./screens/ModuleOverScreen";
 
 type Screen = "login" | "menu" | "start" | "test" | "break" | "review" | "moduleOver" | "done";
 
-const SESSION_STORAGE_KEY = "sat-bluebook:user";
-
-function loadStoredUser(): User | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as User;
-    if (parsed && typeof parsed.username === "string") return parsed;
-    return null;
-  } catch {
-    return null;
-  }
-}
+const USER_STORAGE_KEY = "sat-bluebook:user";
+const SESSION_STORAGE_KEY = "sat-bluebook:session";
 
 export interface ModuleState {
   answers: Record<number, string>;
@@ -38,21 +26,122 @@ function makeEmptyModuleState(): ModuleState {
   return { answers: {}, flagged: new Set<number>(), crossedOut: {} };
 }
 
+interface PersistedSession {
+  screen: Screen;
+  moduleIndex: number;
+  currentQuestion: number;
+  timeRemaining: number;
+  timerHidden: boolean;
+  moduleStates: Array<{
+    answers: Record<number, string>;
+    flagged: number[];
+    crossedOut: Record<number, string[]>;
+  }>;
+}
+
+function loadStoredUser(): User | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(USER_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as User;
+    if (parsed && typeof parsed.username === "string") return parsed;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function serializeModuleStates(states: ModuleState[]): PersistedSession["moduleStates"] {
+  return states.map((s) => ({
+    answers: s.answers,
+    flagged: Array.from(s.flagged),
+    crossedOut: Object.fromEntries(
+      Object.entries(s.crossedOut).map(([k, v]) => [k, Array.from(v)])
+    ),
+  }));
+}
+
+function deserializeModuleStates(
+  raw: PersistedSession["moduleStates"] | undefined
+): ModuleState[] | null {
+  if (!Array.isArray(raw) || raw.length !== modules.length) return null;
+  try {
+    return raw.map((s) => ({
+      answers: { ...(s.answers ?? {}) },
+      flagged: new Set<number>((s.flagged ?? []).map(Number)),
+      crossedOut: Object.fromEntries(
+        Object.entries(s.crossedOut ?? {}).map(([k, v]) => [
+          Number(k),
+          new Set<string>(v ?? []),
+        ])
+      ),
+    }));
+  } catch {
+    return null;
+  }
+}
+
+function loadStoredSession(): PersistedSession | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.localStorage.getItem(SESSION_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as PersistedSession;
+    if (!parsed || typeof parsed !== "object") return null;
+    return parsed;
+  } catch {
+    return null;
+  }
+}
+
 export default function App() {
   const initialUser = loadStoredUser();
-  const [screen, setScreen] = useState<Screen>(initialUser ? "menu" : "login");
+  const storedSession = initialUser ? loadStoredSession() : null;
+  const restoredModuleStates = storedSession
+    ? deserializeModuleStates(storedSession.moduleStates)
+    : null;
+
+  // "moduleOver" is a transient screen driven by setTimeout — restoring it
+  // would leave the user stuck, so fall back to the test screen.
+  const initialScreen: Screen = storedSession
+    ? storedSession.screen === "moduleOver"
+      ? "test"
+      : storedSession.screen
+    : initialUser
+      ? "menu"
+      : "login";
+
+  const [screen, setScreen] = useState<Screen>(initialScreen);
   const [loggedInUser, setLoggedInUser] = useState<User | null>(initialUser);
 
   if (initialUser) {
     APP_CONFIG.studentName = initialUser.displayName;
   }
-  const [moduleIndex, setModuleIndex] = useState(0);
-  const [currentQuestion, setCurrentQuestion] = useState(1);
-  const [timeRemaining, setTimeRemaining] = useState(0);
-  const [timerHidden, setTimerHidden] = useState(false);
+  const [moduleIndex, setModuleIndex] = useState(storedSession?.moduleIndex ?? 0);
+  const [currentQuestion, setCurrentQuestion] = useState(storedSession?.currentQuestion ?? 1);
+  const [timeRemaining, setTimeRemaining] = useState(storedSession?.timeRemaining ?? 0);
+  const [timerHidden, setTimerHidden] = useState(storedSession?.timerHidden ?? false);
   const [moduleStates, setModuleStates] = useState<ModuleState[]>(
-    modules.map(() => makeEmptyModuleState())
+    restoredModuleStates ?? modules.map(() => makeEmptyModuleState())
   );
+
+  useEffect(() => {
+    if (!loggedInUser) return;
+    try {
+      const payload: PersistedSession = {
+        screen,
+        moduleIndex,
+        currentQuestion,
+        timeRemaining,
+        timerHidden,
+        moduleStates: serializeModuleStates(moduleStates),
+      };
+      window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(payload));
+    } catch {
+      // ignore storage errors
+    }
+  }, [loggedInUser, screen, moduleIndex, currentQuestion, timeRemaining, timerHidden, moduleStates]);
 
   const currentModule = modules[moduleIndex] ?? modules[0];
   const currentState = moduleStates[moduleIndex] ?? makeEmptyModuleState();
@@ -161,7 +250,13 @@ export default function App() {
     setScreen("menu");
     setModuleIndex(0);
     setCurrentQuestion(1);
+    setTimeRemaining(0);
     setModuleStates(modules.map(() => makeEmptyModuleState()));
+    try {
+      window.localStorage.removeItem(SESSION_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
   }
 
   if (screen === "login") return (
@@ -170,7 +265,7 @@ export default function App() {
         setLoggedInUser(user);
         APP_CONFIG.studentName = user.displayName;
         try {
-          window.localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(user));
+          window.localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(user));
         } catch {
           // ignore storage errors (private mode, quota, etc.)
         }
