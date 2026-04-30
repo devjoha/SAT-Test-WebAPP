@@ -153,7 +153,7 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               </div>
             </>
           ) : (
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} autoComplete="off" data-form-type="other">
               <button type="button" onClick={goBack} style={{ display: "flex", alignItems: "center", gap: 10, background: "none", border: "none", color: "#111", fontWeight: 800, fontSize: 16, cursor: "pointer", padding: "0 0 33px" }}>
                 <span style={{ width: 28, height: 28, border: "1px solid #e3e3e3", borderRadius: 5, display: "inline-flex", alignItems: "center", justifyContent: "center", color: "#555", fontSize: 22, lineHeight: 1 }}>‹</span>
                 Back
@@ -163,12 +163,32 @@ export default function LoginScreen({ onLogin }: LoginScreenProps) {
               </h1>
               <div style={{ marginBottom: 24 }}>
                 <label style={{ display: "block", fontSize: 20, fontWeight: 800, marginBottom: 9 }}>{view === "ticket" ? "Ticket Number" : "Email Address"}</label>
-                <input value={username} onChange={(e) => { setUsername(e.target.value); setError(null); }} style={inputStyle} autoFocus autoComplete="username" />
+                <input
+                  name="bluebook-username"
+                  value={username}
+                  onChange={(e) => { setUsername(e.target.value); setError(null); }}
+                  style={inputStyle}
+                  autoFocus
+                  autoComplete="off"
+                  spellCheck={false}
+                  data-lpignore="true"
+                  data-form-type="other"
+                />
               </div>
               <div style={{ marginBottom: 5 }}>
                 <label style={{ display: "block", fontSize: 20, fontWeight: 800, marginBottom: 9 }}>Password</label>
                 <div style={{ position: "relative" }}>
-                  <input type="password" value={password} onChange={(e) => { setPassword(e.target.value); setError(null); }} style={{ ...inputStyle, paddingRight: 48 }} autoComplete="current-password" />
+                  <input
+                    type="password"
+                    name="bluebook-secret"
+                    value={password}
+                    onChange={(e) => { setPassword(e.target.value); setError(null); }}
+                    style={{ ...inputStyle, paddingRight: 48 }}
+                    autoComplete="off"
+                    spellCheck={false}
+                    data-lpignore="true"
+                    data-form-type="other"
+                  />
                   <span style={{ position: "absolute", right: 18, top: "50%", transform: "translateY(-50%)", color: "#555" }}><EyeIcon /></span>
                 </div>
               </div>

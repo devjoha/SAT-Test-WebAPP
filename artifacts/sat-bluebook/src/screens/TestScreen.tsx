@@ -201,6 +201,7 @@ interface TestScreenProps {
   onNavigate: (n: number) => void;
   onReview: () => void;
   onSubmit: () => void;
+  onExit: () => void;
 }
 
 export default function TestScreen({
@@ -220,7 +221,14 @@ export default function TestScreen({
   onNext,
   onNavigate,
   onReview,
+  onExit,
 }: TestScreenProps) {
+  function handleExit() {
+    const ok = window.confirm(
+      "Return to the home screen? Your current test progress will be cleared."
+    );
+    if (ok) onExit();
+  }
   const [showPalette, setShowPalette] = useState(false);
   const [showDirections, setShowDirections] = useState(false);
   const [showCalculator, setShowCalculator] = useState(false);
@@ -279,7 +287,7 @@ export default function TestScreen({
                 <span style={{ fontSize: 17, fontWeight: 700, lineHeight: 1 }}>x²</span>
                 <span>Reference</span>
               </button>
-              <button className="tool-item">
+              <button className="tool-item" onClick={handleExit} title="Return to home">
                 <MoreIcon /><span>More</span>
               </button>
             </>
@@ -288,7 +296,7 @@ export default function TestScreen({
               <button className="tool-item">
                 <HighlightsIcon /><span>Highlights &amp; Notes</span>
               </button>
-              <button className="tool-item">
+              <button className="tool-item" onClick={handleExit} title="Return to home">
                 <MoreIcon /><span>More</span>
               </button>
             </>

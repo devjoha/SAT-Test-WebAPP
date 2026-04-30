@@ -259,6 +259,10 @@ export default function App() {
     }
   }
 
+  function handleExitTest() {
+    handleRestart();
+  }
+
   if (screen === "login") return (
     <LoginScreen
       onLogin={(user) => {
@@ -330,6 +334,7 @@ export default function App() {
       onNavigate={setCurrentQuestion}
       onReview={() => setScreen("review")}
       onSubmit={handleSubmit}
+      onExit={handleExitTest}
     />
   );
 }
