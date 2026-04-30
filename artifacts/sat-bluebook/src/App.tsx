@@ -263,6 +263,17 @@ export default function App() {
     handleRestart();
   }
 
+  function handleLogout() {
+    handleRestart();
+    setLoggedInUser(null);
+    try {
+      window.localStorage.removeItem(USER_STORAGE_KEY);
+    } catch {
+      // ignore
+    }
+    setScreen("login");
+  }
+
   if (screen === "login") return (
     <LoginScreen
       onLogin={(user) => {
@@ -281,6 +292,7 @@ export default function App() {
     <MenuScreen
       user={loggedInUser!}
       onStartTest={() => setScreen("start")}
+      onLogout={handleLogout}
     />
   );
   if (screen === "start") return (

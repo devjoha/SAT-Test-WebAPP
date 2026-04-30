@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { type User } from "../data/users";
 
 const BLUE = "#3150b7";
@@ -76,11 +76,32 @@ const BigFuturePhoto = () => (
 interface MenuScreenProps {
   user: User;
   onStartTest: () => void;
+  onLogout: () => void;
 }
 
-export default function MenuScreen({ user, onStartTest }: MenuScreenProps) {
+export default function MenuScreen({ user, onStartTest, onLogout }: MenuScreenProps) {
   const [yourTestsTab, setYourTestsTab] = useState<"active" | "past">("active");
   const [practiceTab, setPracticeTab] = useState<"active" | "past">("active");
+  const [showAccountMenu, setShowAccountMenu] = useState(false);
+  const accountMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showAccountMenu) return;
+    function handleDocClick(e: MouseEvent) {
+      if (accountMenuRef.current && !accountMenuRef.current.contains(e.target as Node)) {
+        setShowAccountMenu(false);
+      }
+    }
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setShowAccountMenu(false);
+    }
+    document.addEventListener("mousedown", handleDocClick);
+    document.addEventListener("keydown", handleKey);
+    return () => {
+      document.removeEventListener("mousedown", handleDocClick);
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [showAccountMenu]);
 
   const TabButton = ({ label, active, onClick }: { label: string; active: boolean; onClick: () => void }) => (
     <button onClick={onClick} style={{ minWidth: 80, height: 33, padding: "0 17px", fontSize: 15, fontWeight: 500, color: active ? "#fff" : "#111", background: active ? "#4c4c4c" : "#fff", border: "1px solid #9b9b9b", borderLeftWidth: label === "Past" ? 0 : 1, borderRadius: label === "Active" ? "8px 0 0 8px" : "0 8px 8px 0", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
@@ -99,7 +120,80 @@ export default function MenuScreen({ user, onStartTest }: MenuScreenProps) {
     <div style={{ position: "fixed", inset: 0, fontFamily: "Arial, Helvetica, sans-serif", background: "#f7f7f7", overflowY: "auto", color: "#111" }}>
       <header style={{ height: 82, background: "#e6ecf7", display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 48px", position: "sticky", top: 0, zIndex: 4 }}>
         <BluebookLogoSmall />
-        <div style={{ display: "flex", alignItems: "center", gap: 12, fontSize: 17, fontWeight: 800 }}><span>{user.displayName}</span><AvatarIcon /></div>
+        <div ref={accountMenuRef} style={{ position: "relative" }}>
+          <button
+            type="button"
+            onClick={() => setShowAccountMenu(v => !v)}
+            aria-haspopup="menu"
+            aria-expanded={showAccountMenu}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              fontSize: 17,
+              fontWeight: 800,
+              background: "none",
+              border: "none",
+              padding: "4px 6px",
+              borderRadius: 8,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              color: "#111",
+            }}
+          >
+            <span>{user.displayName}</span>
+            <AvatarIcon />
+          </button>
+          {showAccountMenu && (
+            <div
+              role="menu"
+              style={{
+                position: "absolute",
+                top: "calc(100% + 8px)",
+                right: 0,
+                background: "#fff",
+                border: "1px solid #d1d5db",
+                borderRadius: 8,
+                boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+                minWidth: 200,
+                padding: "6px 0",
+                zIndex: 20,
+              }}
+            >
+              <div style={{ padding: "10px 14px 8px", borderBottom: "1px solid #eee" }}>
+                <div style={{ fontSize: 13, color: "#666", fontWeight: 500 }}>Signed in as</div>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#111", marginTop: 2 }}>{user.displayName}</div>
+              </div>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => { setShowAccountMenu(false); onLogout(); }}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  width: "100%",
+                  background: "none",
+                  border: "none",
+                  textAlign: "left",
+                  padding: "10px 14px",
+                  fontSize: 14,
+                  fontWeight: 700,
+                  color: "#b91c1c",
+                  cursor: "pointer",
+                  fontFamily: "inherit",
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
       </header>
 
       <main style={{ padding: "42px 48px 40px", maxWidth: 1040, margin: "0 auto" }}>
