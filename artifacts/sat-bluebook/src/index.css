@@ -680,10 +680,13 @@ border-image: repeating-linear-gradient(
 .break-main {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 60px 80px;
-  gap: 80px;
+  justify-content: center;
+  padding: 60px 40px;
+  gap: 40px;
   overflow-y: auto;
+  text-align: center;
 }
 
 .break-timer-block {
@@ -703,8 +706,13 @@ border-image: repeating-linear-gradient(
 }
 
 .break-instructions {
-  flex: 1;
-  max-width: 520px;
+  max-width: 560px;
+  text-align: center;
+}
+
+.break-instructions ol {
+  text-align: left;
+  display: inline-block;
 }
 
 .break-footer {
@@ -717,13 +725,8 @@ border-image: repeating-linear-gradient(
 
 @media (max-width: 767px) {
   .break-main {
-    flex-direction: column;
     padding: 32px 24px;
-    gap: 32px;
-    align-items: center;
-  }
-  .break-timer-block {
-    width: 100%;
+    gap: 28px;
   }
   .break-timer-box {
     width: 100%;
@@ -738,6 +741,6 @@ border-image: repeating-linear-gradient(
 @media (max-width: 480px) {
   .break-main {
     padding: 20px 16px;
-    gap: 24px;
+    gap: 20px;
   }
 }
