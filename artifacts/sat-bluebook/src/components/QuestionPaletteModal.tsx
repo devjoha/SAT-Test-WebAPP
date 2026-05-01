@@ -88,6 +88,10 @@ export default function QuestionPaletteModal({
             <span style={{ fontSize: 13, color: "#374151" }}>Unanswered</span>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ width: 18, height: 18, borderRadius: 3, background: "#2563eb" }} />
+            <span style={{ fontSize: 13, color: "#374151" }}>Answered</span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <RedBookmarkIcon />
             <span style={{ fontSize: 13, color: "#374151" }}>For Review</span>
           </div>
@@ -113,15 +117,15 @@ export default function QuestionPaletteModal({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    border: isAnswered ? "1.5px solid #2563eb" : "1.5px dashed #9ca3af",
+                    border: isAnswered ? "none" : "1.5px dashed #9ca3af",
                     borderRadius: 6,
-                    background: "#fff",
-                    color: "#2563eb",
+                    background: isAnswered ? "#2563eb" : "#fff",
+                    color: isAnswered ? "#fff" : "#374151",
                     fontSize: 14,
                     fontWeight: 600,
                     cursor: "pointer",
                     position: "relative",
-                    outline: isCurrent ? "2px solid #111827" : "none",
+                    outline: isCurrent ? "2.5px solid #111827" : "none",
                     outlineOffset: 2,
                   }}
                 >

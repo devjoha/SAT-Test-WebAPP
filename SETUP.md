@@ -237,6 +237,34 @@ After any edit, re-run the build command and reload your browser.
 
 ---
 
+## App Features
+
+### Login
+- Two-stage sign-in screen matching the real Bluebook UI
+- Password field is visually masked without using `type="password"`, so browsers won't trigger password-breach warnings or offer to save credentials
+- The eye icon toggles between hidden and visible password
+- Credentials are validated against `artifacts/sat-bluebook/src/data/users.ts`
+
+### Home Screen (Menu)
+- Displays "Your Tests" and "Practice and Prepare" sections
+- Click your name / avatar in the top-right corner to open the account menu
+- The account menu shows who is signed in and a **Sign Out** button that returns you to the login screen
+
+### Test Interface
+- Full SAT Digital test flow: R&W Module 1 → R&W Module 2 → Break → Math Module 1 → Math Module 2
+- **More menu (⋮)** — clicking the three-dot button in the top-right of the test opens a dropdown with:
+  - **Help** — quick reference for all test tools
+  - **Return to Home Screen** — exits the test (shows an in-app confirmation dialog, not a browser popup)
+  - **Finish Test** — submits the test early (also shows an in-app confirmation dialog)
+- **Question palette** — open from the bottom pill; answered questions show as solid blue squares, unanswered as dashed outlines
+- **Timer** — hide/show toggle; turns red in the last 5 minutes
+- **Mark for Review** — bookmark flag shown in the question palette
+- **Eliminate answers** — right-click an option or click the circled letter to cross it out
+- **Desmos graphing calculator** — available in Math modules (requires internet)
+- **Reference sheet** — math formulas panel in Math modules
+
+---
+
 ## Common Issues
 
 ### `vite: command not found`
