@@ -30,6 +30,24 @@ export const USERS: User[] = [
     nickname: "Masha",
     displayName: "Xabiba Xayrullaeva",
     firstName: "Xabiba",
+  },{
+    username: "madi@madi.com",
+    password: "madi",
+    nickname: "Madiii",
+    displayName: "Madina Maxkamova",
+    firstName: "Madina",
+  },{
+    username: "abbv@abbv.com",
+    password: "abbv",
+    nickname: "Abbv",
+    displayName: "Abbos Abdusattarov",
+    firstName: "Abbos",
+  },{
+    username: "santa@santa.com",
+    password: "santa",
+    nickname: "Santa",
+    displayName: "Santalat Nurimova",
+    firstName: "Santalat",
   },
 ];
 
