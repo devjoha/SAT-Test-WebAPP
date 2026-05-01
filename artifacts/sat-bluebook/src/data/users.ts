@@ -44,10 +44,10 @@ export const USERS: User[] = [
     firstName: "Abbos",
   },{
     username: "santa@santa.com",
-    password: "masha",
-    nickname: "Masha",
-    displayName: "Xabiba Xayrullaeva",
-    firstName: "Xabiba",
+    password: "santa",
+    nickname: "Santa",
+    displayName: "Santalat Nurimova",
+    firstName: "Santalat",
   },
 ];
 
