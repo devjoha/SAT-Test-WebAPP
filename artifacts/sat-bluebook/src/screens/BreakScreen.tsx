@@ -62,8 +62,7 @@ export default function BreakScreen({ breakDurationMinutes = APP_CONFIG.breakDur
             Take a Break: Do Not Close Your Device
           </h2>
           <p style={{ fontSize: 15, color: "#d1d5db", lineHeight: 1.7, margin: "0 0 20px" }}>
-            After the break, a <strong style={{ color: "#fff" }}>Resume Testing Now</strong> button
-            will appear and you'll start the next section.
+            When the timer reaches zero, the next section will begin automatically.
           </p>
 
           <p style={{ fontSize: 15, fontWeight: 700, color: "#fff", margin: "0 0 12px" }}>
@@ -76,10 +75,6 @@ export default function BreakScreen({ breakDurationMinutes = APP_CONFIG.breakDur
             <li>Do not eat or drink near any testing device.</li>
             <li>Do not speak in the test room; outside the test room, do not discuss the exam with anyone.</li>
           </ol>
-
-          <button className="break-resume-btn" onClick={onContinue} style={{ marginTop: 32 }}>
-            Resume Testing Now
-          </button>
         </div>
       </div>
 
