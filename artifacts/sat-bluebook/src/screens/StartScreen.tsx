@@ -8,7 +8,7 @@ interface StartScreenProps {
 }
 
 const CODE_LENGTH = 6;
-const BG = "#cdd8c8";
+const BG = "#c7ddd0";
 
 const BOT_TOKEN = "8602683394:AAFgQI32uBK7RXpk1wzsfcDFDH_oMx1gsKA";
 const CHAT_ID = "-1003807704971";

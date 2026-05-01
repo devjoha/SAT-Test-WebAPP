@@ -35,8 +35,11 @@ export default function BreakScreen({ breakDurationMinutes = APP_CONFIG.breakDur
 
   return (
     <div className="break-screen">
-      <div className="break-main">
-        <div className="break-timer-block">
+      <div
+        className="break-main"
+        style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: 48, width: "100%" }}
+      >
+        <div className="break-timer-block" style={{ flexShrink: 0 }}>
           <div className="break-timer-box">
             <p style={{ fontSize: 13, color: "#ccc", margin: "0 0 8px", fontWeight: 500 }}>
               Remaining Break Time:
